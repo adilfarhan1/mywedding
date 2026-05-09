@@ -9,11 +9,11 @@ export default function Home() {
   return (
     <main className="relative min-h-screen">
       <CanvasBackground />
-      <div className="relative z-10 flex flex-col gap-20 pb-32">
+      <div className="relative z-10 flex flex-col gap-20">
         <Hero />
+        <RSVP />
         <Countdown />
         <Timeline />
-        <RSVP />
         <GiftSection />
       </div>
     </main>
