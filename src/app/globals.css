@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-gold: #D4AF37;
+  --color-gold-light: #E5C158;
+  --color-gold-dark: #B5952F;
+  --color-ivory: #FFFFF0;
+  --color-blush: #FFB6C1;
+  --color-beige: #F5F5DC;
+  --color-charcoal: #1A1A1A;
+
+  --font-arabic: var(--font-arabic);
+  --font-serif: var(--font-playfair);
+  --font-sans: var(--font-inter);
+}
+
+:root {
+  --background: #FFFFF0;
+  /* Ivory */
+  --foreground: #1A1A1A;
+  /* Charcoal */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #111111;
+    --foreground: #FFFFF0;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Custom utility for glassmorphism */
+@utility glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@utility text-glow {
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.5), 0 0 20px rgba(212, 175, 55, 0.3);
+}
+
+/* Calligraphy styles */
+.calligraphy {
+  font-family: var(--font-arabic), serif;
+  line-height: 1.5;
+  text-align: center;
+}
