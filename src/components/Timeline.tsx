@@ -8,12 +8,12 @@ import { Heart, Stars, Utensils, Music, GlassWater, Sparkles } from "lucide-reac
 gsap.registerPlugin(ScrollTrigger);
 
 const timelineEvents = [
-  { time: "10:00 AM", title: "Nikah Ceremony", description: "The sacred union.", icon: Heart },
   { time: "11:30 AM", title: "Groom Entry", description: "The royal arrival.", icon: Stars },
-  { time: "12:00 PM", title: "Bride Entry", description: "Walking down the aisle.", icon: Sparkles },
-  { time: "01:00 PM", title: "Couple Stage", description: "Blessings and photos.", icon: Music },
-  { time: "02:00 PM", title: "Royal Feast", description: "Lunch is served.", icon: Utensils },
-  { time: "04:00 PM", title: "Cake Cutting", description: "Sweet beginnings.", icon: GlassWater },
+  { time: "12:00 AM", title: "Nikah Ceremony", description: "The sacred union.", icon: Heart },
+  { time: "1:00 PM", title: "Bride Entry", description: "Walking down the aisle.", icon: Sparkles },
+  { time: "01:15 PM", title: "Couple Stage", description: "Blessings and photos.", icon: Music },
+  { time: "01:00 PM", title: "Royal Feast", description: "Lunch is served.", icon: Utensils },
+  { time: "03:00 PM", title: "Cake Cutting", description: "Sweet beginnings.", icon: GlassWater },
 ];
 
 export default function Timeline() {
@@ -63,10 +63,10 @@ export default function Timeline() {
           {timelineEvents.map((event, index) => {
             const isEven = index % 2 === 0;
             const Icon = event.icon;
-            
+
             return (
               <div key={index} className={`timeline-item relative flex flex-col md:flex-row items-center ${isEven ? "md:flex-row-reverse" : ""}`}>
-                
+
                 {/* Content Box */}
                 <div className={`w-full md:w-[45%] flex ${isEven ? "md:justify-start" : "md:justify-end"} mb-8 md:mb-0`}>
                   <div className={`glass p-6 rounded-2xl border border-[var(--color-gold)]/20 shadow-[0_0_15px_rgba(212,175,55,0.05)] w-full max-w-sm flex flex-col ${isEven ? "md:items-start text-center md:text-left" : "md:items-end text-center md:text-right"}`}>

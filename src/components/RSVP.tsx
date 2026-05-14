@@ -41,7 +41,7 @@ export default function RSVP({ defaultName = "" }: { defaultName?: string }) {
   return (
     <section className="relative py-32 px-4 flex flex-col items-center justify-center max-w-2xl mx-auto">
       <div className="glass rounded-3xl p-8 md:p-12 border border-[var(--color-gold)]/30 shadow-[0_0_50px_rgba(212,175,55,0.1)] w-full text-center relative overflow-hidden">
-        
+
         <AnimatePresence mode="wait">
           {!attending && !submitted && (
             <motion.div
@@ -51,7 +51,7 @@ export default function RSVP({ defaultName = "" }: { defaultName?: string }) {
               exit={{ opacity: 0, y: -20 }}
             >
               <h3 className="font-serif text-3xl md:text-4xl text-[var(--color-gold)] mb-8">Are You Attending?</h3>
-              
+
               <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
                 <button
                   onClick={() => setAttending("yes")}
@@ -81,7 +81,7 @@ export default function RSVP({ defaultName = "" }: { defaultName?: string }) {
               className="flex flex-col gap-6"
             >
               <h3 className="font-serif text-3xl text-[var(--color-gold)] mb-2">Wonderful!</h3>
-              <p className="text-white/70 text-sm tracking-wider uppercase mb-4">We can&apos;t wait to see you.</p>
+              <p className="text-white/70 text-sm tracking-wider uppercase mb-4">We look forward to celebrating this special day with you.</p>
 
               <div className="text-left">
                 <label className="block text-[var(--color-gold)] text-xs uppercase tracking-widest mb-2">Guest / Family Name</label>
@@ -92,7 +92,7 @@ export default function RSVP({ defaultName = "" }: { defaultName?: string }) {
                   onChange={(e) => setName(e.target.value)}
                   disabled={!!defaultName}
                   className="w-full bg-black/40 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[var(--color-gold)] transition-colors disabled:opacity-50"
-                  placeholder="e.g. Mr. & Mrs. Khan"
+                  placeholder=""
                 />
               </div>
 
@@ -103,7 +103,7 @@ export default function RSVP({ defaultName = "" }: { defaultName?: string }) {
                   onChange={(e) => setMembers(e.target.value)}
                   className="w-full bg-black/40 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[var(--color-gold)] transition-colors appearance-none"
                 >
-                  {[1, 2, 3, 4, 5, 6, 7, 8].map(num => (
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
                     <option key={num} value={num} className="bg-[#111]">{num}</option>
                   ))}
                 </select>
@@ -187,8 +187,8 @@ export default function RSVP({ defaultName = "" }: { defaultName?: string }) {
               </div>
               <h3 className="font-serif text-3xl text-[var(--color-gold)] mb-4">Thank You, {name}!</h3>
               <p className="text-white/70 text-sm tracking-wider">
-                {attending === "yes" 
-                  ? "Your attendance has been confirmed. See you at the Nikah!" 
+                {attending === "yes"
+                  ? "Your attendance has been confirmed. See you at the Nikah!"
                   : "We have received your message. Thank you for your blessings."}
               </p>
             </motion.div>

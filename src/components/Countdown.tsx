@@ -11,7 +11,7 @@ export default function Countdown() {
     seconds: 0,
   });
 
-  const targetDate = new Date("2026-12-25T10:00:00"); // 25 Dec 2026, 10 AM
+  const targetDate = new Date("2026-11-22T10:00:00");
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -35,11 +35,11 @@ export default function Countdown() {
 
   const generateICS = () => {
     const event = {
-      title: "Adil & Zara's Wedding",
+      title: "Adil Farhan & Lubna Nasrin's Wedding",
       description: "Join us in celebrating our Nikah.",
-      location: "The Royal Palace, Dubai, UAE",
-      startTime: "20261225T100000Z",
-      endTime: "20261225T150000Z",
+      location: "Athafy Auditorium, Vadakara, Vallikkad Road",
+      startTime: "20261122T100000Z",
+      endTime: "20261122T150000Z",
     };
 
     const icsContent = `BEGIN:VCALENDAR
@@ -56,7 +56,7 @@ LOCATION:${event.location}
 BEGIN:VALARM
 TRIGGER:-P1D
 ACTION:DISPLAY
-DESCRIPTION:Reminder: Adil & Zara's Wedding tomorrow!
+DESCRIPTION:Reminder: Adil Farhan & Lubna Nasrin's Wedding tomorrow!
 END:VALARM
 END:VEVENT
 END:VCALENDAR`;

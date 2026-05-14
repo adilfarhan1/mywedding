@@ -27,7 +27,7 @@ export default function Hero() {
           className="flex flex-col items-center w-full"
         >
           {/* Calligraphy */}
-          <h1 className="calligraphy text-[0.9rem] text-[var(--color-gold)] mb-6 drop-shadow-md tracking-wider ">
+          <h1 className="calligraphy text-[1.4rem] text-[var(--color-gold)] mb-6 drop-shadow-md tracking-wider ">
             بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
           </h1>
 
@@ -51,7 +51,7 @@ export default function Hero() {
           <div className="w-full flex items-center justify-center gap-6 mb-8 border-y border-[var(--color-gold)]/20 py-4">
             <div className="text-right">
               <span className="block font-sans text-xs text-[var(--color-gold)] tracking-widest uppercase">Nikah</span>
-              <span className="block font-serif text-lg text-white">10:00 AM</span>
+              <span className="block font-serif text-lg text-white">11:30 AM</span>
             </div>
             <div className="h-8 w-px bg-[var(--color-gold)]/40" />
             <div className="text-left">
