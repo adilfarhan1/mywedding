@@ -49,6 +49,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, guest }, { status: 201 });
   } catch (error) {
+    console.error("POST /api/admin/guests error:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

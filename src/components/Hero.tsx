@@ -11,7 +11,7 @@ export default function Hero() {
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.5, ease: "easeOut" }}
-        className="relative w-full max-w-[420px] md:aspect-[3/4] mx-auto glass rounded-2xl border border-[var(--color-gold)]/30 overflow-hidden flex flex-col items-center justify-center p-8 text-center"
+        className="relative w-full max-w-[420px] mx-auto glass rounded-2xl border border-[var(--color-gold)]/30 overflow-hidden flex flex-col items-center justify-center p-8 text-center"
         style={{
           boxShadow: "0 25px 50px -12px rgba(212, 175, 55, 0.15), inset 0 0 20px rgba(212, 175, 55, 0.05)"
         }}
@@ -37,12 +37,12 @@ export default function Hero() {
 
           {/* Couple Names */}
           <div className="flex flex-col items-center gap-2 mb-6">
-            <h2 className="font-serif text-4xl md:text-5xl text-glow text-white">Adil Farhan</h2>
+            <h2 className="font-serif text-4xl text-glow text-white">Adil Farhan</h2>
             <span className="font-serif italic text-xl text-[var(--color-gold)]">&amp;</span>
-            <h2 className="font-serif text-4xl md:text-5xl text-glow text-white">Lubna Nasrin</h2>
+            <h2 className="font-serif text-4xl text-glow text-white">Lubna Nasrin</h2>
           </div>
 
-          <p className="font-sans text-xs text-white/60 uppercase tracking-[0.1em] mb-10 max-w-[250px] leading-relaxed">
+          <p className="font-sans text-xs text-white/60 uppercase tracking-[0.1em] mb-10 leading-relaxed">
             Son of Mr. Ibrahim & Mrs. Naseema <br />
             Daughter of Mr. Riyas & Mrs. Rahana
           </p>

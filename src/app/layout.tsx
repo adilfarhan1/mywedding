@@ -3,7 +3,7 @@ import { Inter, Playfair_Display, Amiri } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import AudioPlayer from "@/components/AudioPlayer";
-
+import PetalBlast from "@/components/PetalBlast";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -44,6 +44,7 @@ export default function RootLayout({
         <SmoothScroll>
           {children}
           <AudioPlayer />
+          <PetalBlast />
         </SmoothScroll>
       </body>
     </html>

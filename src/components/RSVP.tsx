@@ -24,6 +24,9 @@ export default function RSVP({ defaultName = "" }: { defaultName?: string }) {
 
       if (res.ok) {
         setSubmitted(true);
+        if (attending === "yes") {
+          window.dispatchEvent(new CustomEvent("rsvp-confirmed"));
+        }
       } else {
         alert("Something went wrong. Please try again.");
       }
