@@ -65,7 +65,7 @@ export default function PetalBlast() {
                 delay: petal.delay, 
                 ease: "linear"
               }}
-              className="absolute text-[var(--color-gold)]"
+              className="absolute text-[#ec94da]"
             >
               {/* Simple petal SVG */}
               <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">

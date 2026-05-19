@@ -24,6 +24,7 @@ export default {
         sans: ["var(--font-inter)"],
         serif: ["var(--font-playfair)"],
         arabic: ["var(--font-arabic)"],
+        roboto: ["var(--font-roboto)"],
       },
     },
   },

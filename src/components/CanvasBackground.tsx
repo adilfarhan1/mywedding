@@ -33,7 +33,7 @@ function ParticleSwarm({ count = 1500 }) {
     <Points ref={pointsRef} positions={positions} stride={3} frustumCulled={false}>
       <PointMaterial
         transparent
-        color="#D4AF37" // Gold
+        color="#FFD7F7" // Gold
         size={0.05}
         sizeAttenuation={true}
         depthWrite={false}
@@ -46,7 +46,7 @@ function ParticleSwarm({ count = 1500 }) {
 
 export default function CanvasBackground() {
   return (
-    <div className="fixed inset-0 z-[-1] bg-gradient-to-b from-[#111111] via-[#1a1a1a] to-[#222222]">
+    <div className="fixed inset-0 z-[-1] bg-gradient-to-gold from-[#FFD7F7] via-[#fdddf8] to-[#ffcae3]">
       <Canvas camera={{ position: [0, 0, 5], fov: 60 }}>
         <ambientLight intensity={0.5} />
         <ParticleSwarm />

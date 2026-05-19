@@ -51,12 +51,12 @@ export default function Hero() {
           <div className="w-full flex items-center justify-center gap-6 mb-8 border-y border-[var(--color-gold)]/20 py-4">
             <div className="text-right">
               <span className="block font-sans text-xs text-[var(--color-gold)] tracking-widest uppercase">Nikah</span>
-              <span className="block font-serif text-lg text-white">11:30 AM</span>
+              <span className="block font-roboto font-semibold text-lg text-white">11:30 AM</span>
             </div>
             <div className="h-8 w-px bg-[var(--color-gold)]/40" />
             <div className="text-left">
               <span className="block font-sans text-xs text-[var(--color-gold)] tracking-widest uppercase">Date</span>
-              <span className="block font-serif text-lg text-white">NOV 22 2026</span>
+              <span className="block font-roboto font-semibold text-lg text-white">22 NOV 2026</span>
             </div>
           </div>
 

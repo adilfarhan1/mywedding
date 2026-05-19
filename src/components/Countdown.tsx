@@ -76,7 +76,7 @@ END:VCALENDAR`;
     <section className="relative py-32 px-4 flex flex-col items-center justify-center">
       <div className="text-center mb-16">
         <h3 className="font-serif text-3xl md:text-4xl text-[var(--color-gold)] mb-4">The Countdown Begins</h3>
-        <p className="font-sans text-sm text-white/60 tracking-widest uppercase">Can&apos;t wait to celebrate with you</p>
+        <p className="font-sans text-sm text-[var(--color-gold)] tracking-widest uppercase">Can&apos;t wait to celebrate with you</p>
       </div>
 
       <div className="flex gap-4 md:gap-8 mb-16">
@@ -86,9 +86,9 @@ END:VCALENDAR`;
           { label: "Mins", value: timeLeft.minutes },
           { label: "Secs", value: timeLeft.seconds },
         ].map((item, i) => (
-          <div key={i} className="flex flex-col items-center">
-            <div className="w-16 h-16 md:w-24 md:h-24 glass rounded-xl flex items-center justify-center border border-[var(--color-gold)]/20 shadow-[0_0_20px_rgba(212,175,55,0.1)] mb-4">
-              <span className="font-serif text-2xl md:text-4xl text-white text-glow">
+          <div key={i} className="flex flex-col items-center ">
+            <div className="w-16 h-16 md:w-24 md:h-24 glass rounded-xl flex items-center justify-center border !border-[var(--color-gold)] bg-[var(--color-gold)]/10 shadow-[0_0_20px_rgba(212,175,55,0.1)] mb-4">
+              <span className="font-serif text-2xl md:text-4xl text-[var(--color-gold)] text-glow">
                 {item.value.toString().padStart(2, "0")}
               </span>
             </div>
@@ -100,7 +100,7 @@ END:VCALENDAR`;
       <div className="flex flex-col sm:flex-row gap-4">
         <button
           onClick={generateICS}
-          className="flex items-center gap-2 px-6 py-3 rounded-full border border-white/20 glass text-white text-xs uppercase tracking-widest hover:border-[var(--color-gold)] hover:text-[var(--color-gold)] transition-all duration-300"
+          className="flex items-center gap-2 px-6 py-3 rounded-full border border-[var(--color-gold)] bg-[var(--color-gold)]/10 text-[var(--color-gold)] text-xs uppercase tracking-widest hover:bg-[var(--color-gold)] hover:text-black transition-all duration-300"
         >
           <Calendar size={16} />
           Apple / Outlook

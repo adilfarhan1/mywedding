@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display, Amiri } from "next/font/google";
+import { Inter, Playfair_Display, Amiri, Roboto } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import AudioPlayer from "@/components/AudioPlayer";
@@ -23,6 +23,13 @@ const amiri = Amiri({
   display: "swap",
 });
 
+const roboto = Roboto({
+  weight: ["400", "500", "700"],
+  subsets: ["latin"],
+  variable: "--font-roboto",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Wedding Invitation",
   description: "You are joyfully invited to our wedding celebration.",
@@ -39,7 +46,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${playfair.variable} ${amiri.variable}`}>
+    <html lang="en" className={`${inter.variable} ${playfair.variable} ${amiri.variable} ${roboto.variable}`}>
       <body className="antialiased selection:bg-gold/30 selection:text-gold-light">
         <SmoothScroll>
           {children}
