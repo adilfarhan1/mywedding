@@ -27,32 +27,32 @@ const timelineEvents = [
 export default function Timeline() {
   const containerRef = useRef(null);
 
-useEffect(() => {
-  if (!containerRef.current) return;
+// useEffect(() => {
+//   if (!containerRef.current) return;
 
-  const items = containerRef.current.querySelectorAll<HTMLElement>(
-    ".timeline-item"
-  );
+//   const items = containerRef.current.querySelectorAll<HTMLElement>(
+//     ".timeline-item"
+//   );
 
-  items.forEach((item) => {
-    gsap.fromTo(
-      item,
-      { opacity: 0, y: 60, scale: 0.92 },
-      {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 0.9,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: item,
-          start: "top 85%",
-          toggleActions: "play none none reverse",
-        },
-      }
-    );
-  });
-}, []);
+//   items.forEach((item) => {
+//     gsap.fromTo(
+//       item,
+//       { opacity: 0, y: 60, scale: 0.92 },
+//       {
+//         opacity: 1,
+//         y: 0,
+//         scale: 1,
+//         duration: 0.9,
+//         ease: "power3.out",
+//         scrollTrigger: {
+//           trigger: item,
+//           start: "top 85%",
+//           toggleActions: "play none none reverse",
+//         },
+//       }
+//     );
+//   });
+// }, []);
 
   return (
     <section
