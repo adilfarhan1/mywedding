@@ -1,53 +1,42 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display, Amiri, Roboto } from "next/font/google";
+import { Cinzel, EB_Garamond, Noto_Naskh_Arabic, Rouge_Script } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import AudioPlayer from "@/components/AudioPlayer";
 import PetalBlast from "@/components/PetalBlast";
-const inter = Inter({
+
+const cinzel = Cinzel({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-cinzel",
   display: "swap",
 });
-
-const playfair = Playfair_Display({
+const garamond = EB_Garamond({
   subsets: ["latin"],
-  variable: "--font-playfair",
+  variable: "--font-garamond",
   display: "swap",
 });
-
-const amiri = Amiri({
+const arabic = Noto_Naskh_Arabic({
   weight: ["400", "700"],
   subsets: ["arabic"],
   variable: "--font-arabic",
   display: "swap",
 });
-
-const roboto = Roboto({
-  weight: ["400", "500", "700"],
+const rouge = Rouge_Script({
+  weight: "400",
   subsets: ["latin"],
-  variable: "--font-roboto",
+  variable: "--font-rouge",
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Wedding Invitation",
-  description: "You are joyfully invited to our wedding celebration.",
-  openGraph: {
-    title: "Wedding Invitation",
-    description: "You are joyfully invited to our wedding celebration.",
-    type: "website",
-  },
+  title: "Wedding Invitation — Adil & Lubna",
+  description: "You are joyfully invited to our Nikah celebration.",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${playfair.variable} ${amiri.variable} ${roboto.variable}`}>
-      <body className="antialiased selection:bg-gold/30 selection:text-gold-light">
+    <html lang="en" className={`${cinzel.variable} ${garamond.variable} ${arabic.variable} ${rouge.variable}`}>
+      <body className="antialiased">
         <SmoothScroll>
           {children}
           <AudioPlayer />

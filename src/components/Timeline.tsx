@@ -3,95 +3,265 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Heart, Stars, Utensils, Music, GlassWater, Sparkles } from "lucide-react";
+
+import {
+  Heart,
+  Stars,
+  Utensils,
+  Music,
+  GlassWater,
+  Sparkles,
+} from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const timelineEvents = [
-  { time: "11:30 AM", title: "Groom Entry", description: "The royal arrival.", icon: Stars },
-  { time: "12:00 AM", title: "Nikah Ceremony", description: "The sacred union.", icon: Heart },
-  { time: "1:00 PM", title: "Bride Entry", description: "Walking down the aisle.", icon: Sparkles },
-  { time: "01:15 PM", title: "Couple Stage", description: "Blessings and photos.", icon: Music },
-  { time: "01:00 PM", title: "Royal Feast", description: "Lunch is served.", icon: Utensils },
-  { time: "03:00 PM", title: "Cake Cutting", description: "Sweet beginnings.", icon: GlassWater },
+  { time: "11:30 AM", title: "Groom Entry", description: "The royal arrival.", icon: Stars, emoji: "🌿" },
+  { time: "12:00 PM", title: "Nikah Ceremony", description: "The sacred union.", icon: Heart, emoji: "🤍" },
+  { time: "01:00 PM", title: "Bride Entry", description: "Walking into a new chapter.", icon: Sparkles, emoji: "🌸" },
+  { time: "01:15 PM", title: "Couple on Stage", description: "Blessings and photos.", icon: Music, emoji: "✨" },
+  { time: "01:30 PM", title: "Royal Feast", description: "Lunch is served.", icon: Utensils, emoji: "🍽️" },
+  { time: "03:00 PM", title: "Cake Cutting", description: "Sweet beginnings.", icon: GlassWater, emoji: "🎂" },
 ];
 
 export default function Timeline() {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef(null);
 
-  useEffect(() => {
-    if (!containerRef.current) return;
+useEffect(() => {
+  if (!containerRef.current) return;
 
-    const items = containerRef.current.querySelectorAll(".timeline-item");
+  const items = containerRef.current.querySelectorAll<HTMLElement>(
+    ".timeline-item"
+  );
 
-    items.forEach((item, i) => {
-      gsap.fromTo(
-        item,
-        { opacity: 0, y: 50, scale: 0.9 },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: item,
-            start: "top 85%",
-            toggleActions: "play none none reverse",
-          },
-        }
-      );
-    });
-
-    return () => {
-      ScrollTrigger.getAll().forEach(t => t.kill());
-    };
-  }, []);
+  items.forEach((item) => {
+    gsap.fromTo(
+      item,
+      { opacity: 0, y: 60, scale: 0.92 },
+      {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.9,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: item,
+          start: "top 85%",
+          toggleActions: "play none none reverse",
+        },
+      }
+    );
+  });
+}, []);
 
   return (
-    <section className="relative py-32 px-4 max-w-4xl mx-auto">
-      <div className="text-center mb-20">
-        <h3 className="font-serif text-3xl md:text-4xl text-[var(--color-gold)] mb-4">Wedding Itinerary</h3>
-        <p className="font-sans text-sm text-white/60 tracking-widest uppercase">The flow of our special day</p>
-      </div>
+    <section
+      style={{
+        padding: "90px 16px",
+        background: "var(--parch)",
+        position: "relative",
+      }}
+    >
+      <div style={{ maxWidth: 760, margin: "0 auto" }}>
+        {/* HEADER */}
+        <div style={{ textAlign: "center", marginBottom: 60 }}>
+          <p
+            style={{
+              fontFamily: "var(--font-cinzel)",
+              fontSize: 12,
+              letterSpacing: "0.4em",
+              color: "#544417",
+              textTransform: "uppercase",
+              marginBottom: 10,
+            }}
+          >
+            The Flow of Our Day
+          </p>
 
-      <div ref={containerRef} className="relative">
-        {/* Center Line */}
-        <div className="absolute left-[50%] top-0 bottom-0 w-px bg-[var(--color-gold)]/20 -translate-x-1/2 md:block hidden" />
+          <h2
+            style={{
+              fontFamily: "var(--font-garamond)",
+              fontSize: "clamp(1.8rem,5vw,2.8rem)",
+              fontWeight: 300,
+              color: "#2D6A4F",
+            }}
+          >
+            Wedding Itinerary
+          </h2>
 
-        <div className="flex flex-col gap-12 md:gap-24">
-          {timelineEvents.map((event, index) => {
-            const isEven = index % 2 === 0;
-            const Icon = event.icon;
+          <div style={{ marginTop: 14 }}>
+            <span style={{ color: "var(--color-gold)", fontSize: 13 }}>
+              ✦ ❧ ✦
+            </span>
+          </div>
+        </div>
 
-            return (
-              <div key={index} className={`timeline-item relative flex flex-col md:flex-row items-center ${isEven ? "md:flex-row-reverse" : ""}`}>
+        {/* TIMELINE */}
+        <div ref={containerRef} style={{ position: "relative" }}>
+          {/* center line */}
+          <div
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: 0,
+              bottom: 0,
+              width: 1,
+              transform: "translateX(-50%)",
+              background:
+                "linear-gradient(to bottom, transparent, var(--color-gold) 15%, var(--color-gold) 85%, transparent)",
+            }}
+          />
 
-                {/* Content Box */}
-                <div className={`w-full md:w-[45%] flex ${isEven ? "md:justify-start" : "md:justify-end"} mb-8 md:mb-0`}>
-                  <div className={`glass p-6 rounded-2xl border border-[var(--color-gold)]/20 shadow-[0_0_15px_rgba(212,175,55,0.05)] w-full max-w-sm flex flex-col ${isEven ? "md:items-start text-center md:text-left" : "md:items-end text-center md:text-right"}`}>
-                    <span className="font-sans text-[var(--color-gold)] text-xs tracking-widest uppercase mb-2 block">{event.time}</span>
-                    <h4 className="font-serif text-xl text-white mb-2">{event.title}</h4>
-                    <p className="font-sans text-sm text-white/60">{event.description}</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 42 }}>
+            {timelineEvents.map((ev, i) => {
+              const isLeft = i % 2 === 0;
+
+              return (
+                <div
+                  key={i}
+                  className="timeline-item"
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 60px 1fr",
+                    alignItems: "center",
+                  }}
+                >
+                  {/* LEFT CARD */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      paddingRight: 18,
+                    }}
+                  >
+                    {isLeft && (
+                      <div
+                        style={{
+                          background: "rgba(255,255,255,0.75)",
+                          backdropFilter: "blur(10px)",
+                          borderRadius: 18,
+                          padding: "18px 20px",
+                          maxWidth: 260,
+                          boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
+                          textAlign: "right",
+                        }}
+                      >
+                        <div
+                          style={{
+                            fontSize: 10,
+                            letterSpacing: "0.29em",
+                            color: "#C9A84C",
+                            fontFamily: "var(--font-cinzel)",
+                          }}
+                        >
+                          {ev.time}
+                        </div>
+
+                        <h3
+                          style={{
+                            fontFamily: "var(--font-garamond)",
+                            fontSize: 18,
+                            marginTop: 6,
+                            color: "var(--color-emerald)",
+                          }}
+                        >
+                          {ev.title}
+                        </h3>
+
+                        <p
+                          style={{
+                            fontSize: 13,
+                            opacity: 0.75,
+                            marginTop: 6,
+                            color: "var(--color-ink-soft)",
+                          }}
+                        >
+                          {ev.description}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* CENTER DOT */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      zIndex: 2,
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: 44,
+                        height: 44,
+                        borderRadius: "50%",
+                        background: "white",
+                        border: "2px solid var(--color-gold)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: 16,
+                        boxShadow: "0 2px 14px rgba(201,168,76,0.25)",
+                      }}
+                    >
+                      {ev.emoji}
+                    </div>
+                  </div>
+
+                  {/* RIGHT CARD */}
+                  <div style={{ paddingLeft: 18 }}>
+                    {!isLeft && (
+                      <div
+                        style={{
+                          background: "rgba(255,255,255,0.75)",
+                          backdropFilter: "blur(10px)",
+                          borderRadius: 18,
+                          padding: "18px 20px",
+                          maxWidth: 260,
+                          boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
+                          textAlign: "left",
+                        }}
+                      >
+                        <div
+                          style={{
+                            fontSize: 10,
+                            letterSpacing: "0.25em",
+                            color: "var(--color-gold)",
+                            fontFamily: "var(--font-cinzel)",
+                          }}
+                        >
+                          {ev.time}
+                        </div>
+
+                        <h3
+                          style={{
+                            fontFamily: "var(--font-garamond)",
+                            fontSize: 18,
+                            marginTop: 6,
+                            color: "var(--color-emerald)",
+                          }}
+                        >
+                          {ev.title}
+                        </h3>
+
+                        <p
+                          style={{
+                            fontSize: 13,
+                            opacity: 0.75,
+                            marginTop: 6,
+                            color: "var(--color-ink-soft)",
+                          }}
+                        >
+                          {ev.description}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
-
-                {/* Center Icon */}
-                <div className="absolute left-[50%] -translate-x-1/2 flex items-center justify-center w-12 h-12 rounded-full glass border border-[var(--color-gold)]/50 text-[var(--color-gold)] shadow-[0_0_15px_rgba(212,175,55,0.2)] md:block hidden">
-                  <div className="flex items-center justify-center w-full h-full">
-                    <Icon size={20} />
-                  </div>
-                </div>
-
-                {/* Mobile line connection (optional since we hid the center line on mobile) */}
-                <div className="w-full md:w-[45%] flex justify-center md:hidden mb-4">
-                  <div className="w-12 h-12 rounded-full glass border border-[var(--color-gold)]/50 text-[var(--color-gold)] flex items-center justify-center shadow-[0_0_15px_rgba(212,175,55,0.2)]">
-                    <Icon size={20} />
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

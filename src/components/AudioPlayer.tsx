@@ -1,64 +1,74 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { Volume2, VolumeX } from "lucide-react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+
+// 🎵 Replace this URL with your Arabic nasheed/song hosted file
+const AUDIO_URL = "/audio/romantic.mp3";
 
 export default function AudioPlayer() {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [showButton, setShowButton] = useState(false);
+  const [playing, setPlaying] = useState(false);
+  const [visible, setVisible] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    const handleRSVPConfirmed = () => {
-      setShowButton(true);
-      if (!isPlaying && audioRef.current) {
-        audioRef.current.play().then(() => {
-          setIsPlaying(true);
-        }).catch(() => {
-          // Autoplay was prevented
-        });
-      }
+    const audio = new Audio(AUDIO_URL);
+    audio.loop = true;
+    audio.volume = 0.45;
+    audioRef.current = audio;
+
+    const handleRSVP = () => {
+      setVisible(true);
+      audio.play().then(() => setPlaying(true)).catch(() => {});
     };
 
-    window.addEventListener("rsvp-confirmed", handleRSVPConfirmed);
-
+    window.addEventListener("rsvp-confirmed", handleRSVP);
     return () => {
-      window.removeEventListener("rsvp-confirmed", handleRSVPConfirmed);
+      window.removeEventListener("rsvp-confirmed", handleRSVP);
+      audio.pause();
     };
-  }, [isPlaying]);
+  }, []);
 
-  const togglePlay = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
+  const toggle = () => {
+    if (!audioRef.current) return;
+    if (playing) {
+      audioRef.current.pause();
+      setPlaying(false);
+    } else {
+      audioRef.current.play();
+      setPlaying(true);
     }
   };
 
-  return (
-    <>
-      {/* 
-        Ensure you place a romantic.mp3 inside public/audio/
-        For now, this uses a placeholder empty path or fails silently.
-      */}
-      <audio ref={audioRef} loop src="/audio/romantic.mp3" />
+  if (!visible) return null;
 
-      {showButton && (
-        <motion.button
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-          onClick={togglePlay}
-          className="fixed bottom-6 right-6 z-50 p-3 rounded-full glass bg-white/10 border border-white/20 text-gold shadow-[0_0_15px_rgba(212,175,55,0.2)] hover:shadow-[0_0_25px_rgba(212,175,55,0.4)] transition-all duration-300"
-          aria-label={isPlaying ? "Mute music" : "Play music"}
-        >
-          {isPlaying ? <Volume2 size={24} /> : <VolumeX size={24} />}
-        </motion.button>
-      )}
-    </>
+  return (
+    <button
+      onClick={toggle}
+      title={playing ? "Pause music" : "Play music"}
+      style={{
+        position: "fixed",
+        bottom: 24,
+        right: 24,
+        zIndex: 9998,
+        width: 52,
+        height: 52,
+        borderRadius: "50%",
+        background: "linear-gradient(135deg, #1B4332 0%, #2D6A4F 100%)",
+        border: "1.5px solid rgba(201,168,76,0.5)",
+        cursor: "pointer",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 2,
+        boxShadow: "0 4px 20px rgba(27,67,50,0.4)",
+      }}
+    >
+      {playing
+        ? [1, 2, 3, 4, 5].map((n) => (
+            <div key={n} className="music-bar" style={{ height: 10 }} />
+          ))
+        : <span style={{ fontSize: 20, color: "#C9A84C" }}>♪</span>
+      }
+    </button>
   );
 }
