@@ -41,17 +41,18 @@ export default function Home() {
 
       <div className="relative z-10 flex flex-col">
         <Hero />
+        <RSVP />
         <Countdown />
         <Timeline />
-        <RSVP />
+        
 
         {/* ✅ IMPORTANT: real ref trigger */}
-        <div ref={triggerRef} className="h-10" />
+        {/* <div ref={triggerRef} className="h-10" /> */}
       </div>
 
-      {showPopup && (
+      {/* {showPopup && (
         <RSVPPopup onClose={() => setShowPopup(false)} />
-      )}
+      )} */}
     </main>
   );
 }
