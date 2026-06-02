@@ -3,19 +3,22 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, X, Send, Heart, Crown } from "lucide-react";
+import PetalBlast from "./RosePetalBlast";
 
 type RSVPProps = {
   defaultName?: string;
   slug?: string;
+  onSuccess?: () => void;
 };
 
-export default function RSVP({ defaultName = "", slug }: RSVPProps) {
+export default function RSVP({ defaultName = "", slug, onSuccess }: RSVPProps) {
   const [attending, setAttending] = useState<"yes" | "no" | null>(null);
   const [side, setSide] = useState<"bride" | "groom" | null>(null);
   const [name, setName] = useState(defaultName);
   const [members, setMembers] = useState("1");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showPetals, setShowPetals] = useState(false);
 
   const handleRSVP = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -37,6 +40,18 @@ export default function RSVP({ defaultName = "", slug }: RSVPProps) {
         if (attending === "yes") {
           window.dispatchEvent(new CustomEvent("rsvp-confirmed"));
         }
+         // 🌹 trigger petals
+          setShowPetals(true);
+
+          // ⏱️ hide after minute (3000ms)
+          setTimeout(() => {
+            setShowPetals(false);
+          }, 6000);
+
+         // ✅ close popup after short delay (optional but nicer UX)
+        setTimeout(() => {
+          onSuccess?.();
+        }, 800);
       } else {
         alert("Something went wrong. Please try again.");
       }
@@ -50,6 +65,7 @@ export default function RSVP({ defaultName = "", slug }: RSVPProps) {
 
   return (
     <section className="relative py-28 px-4 flex items-center justify-center">
+      {showPetals && <PetalBlast />}
       <div className="w-full max-w-2xl">
         <div className="rounded-3xl p-6 md:p-10 border border-[var(--color-gold)]/30 bg-white backdrop-blur-xl text-center shadow-[0_0_60px_rgba(212,175,55,0.08)]">
 
