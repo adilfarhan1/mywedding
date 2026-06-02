@@ -1,5 +1,5 @@
 import CanvasBackground from "@/components/CanvasBackground";
-import Hero from "@/components/Hero";
+import GustHero from "@/components/GustHero";
 import Countdown from "@/components/Countdown";
 import Timeline from "@/components/Timeline";
 import GiftSection from "@/components/GiftSection";
@@ -24,17 +24,12 @@ export default async function InvitePage({ params }: { params: Promise<{ slug: s
   return (
     <main className="relative min-h-screen">
       <CanvasBackground />
-      <div className="relative z-10 flex flex-col gap-20 pb-32">
+      <div className="relative z-10 flex flex-col pb-32">
         
-        {guestName && (
-          <div className="pt-20 px-4 text-center">
-            <h2 className="font-serif text-2xl md:text-3xl text-[var(--color-gold)]">Welcome, {guestName}</h2>
-            <p className="font-sans text-xs text-white/60 tracking-widest uppercase mt-2">You are joyfully invited</p>
-          </div>
-        )}
+       
 
-        <div className={guestName ? "mt-[-5rem]" : ""}>
-          <Hero />
+        <div>
+          <GustHero guestName={guestName} />
         </div>
         
         <Countdown />
@@ -43,7 +38,6 @@ export default async function InvitePage({ params }: { params: Promise<{ slug: s
         {/* Pass the guest name to pre-fill and disable the name input */}
         <RSVP defaultName={guestName || ""} />
         
-        <GiftSection />
       </div>
     </main>
   );

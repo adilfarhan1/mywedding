@@ -5,25 +5,23 @@ import Guest from "@/models/Guest";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { name, attending, members, slug } = body;
+    const { name, attending, members, slug, side } = body;
 
     if (!name) {
       return NextResponse.json({ error: "Name is required" }, { status: 400 });
     }
-
     try {
       await connectDB();
     } catch (dbError) {
-      console.warn("Database connection failed. In a real environment, this would fail the request.", dbError);
-      // For the sake of the demo, if DB is not configured, we just return success
+      console.warn("DB not connected:", dbError);
       return NextResponse.json({ success: true, dummy: true }, { status: 200 });
     }
 
     if (slug) {
-      // If they are responding via a personalized link, update existing record
+      // Update existing personalized record
       const guest = await Guest.findOneAndUpdate(
         { slug },
-        { attending, members, name }, // Update name in case they corrected it
+        { attending, members: attending ? members : 0, name, ...(side ? { side } : {}) },
         { new: true }
       );
       if (guest) {
@@ -31,13 +29,13 @@ export async function POST(req: Request) {
       }
     }
 
-    // Otherwise create a new record
+    // New record
     const newGuest = await Guest.create({
       name,
       attending,
       members: attending ? members : 0,
+      side,
     });
-
     return NextResponse.json({ success: true, guest: newGuest }, { status: 201 });
   } catch (error) {
     console.error("RSVP Error:", error);

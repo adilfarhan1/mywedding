@@ -5,19 +5,22 @@ export interface IGuest extends Document {
   attending: boolean | null;
   members: number;
   slug?: string;
-  category?: string;
+  category?: string;        // Group: Family | Friends | Co-workers | VIP
+  familyCategory?: string;  // Custom family label e.g. "Al-Rashid Family"
+  side?: "bride" | "groom"; // Which side of the wedding
   createdAt: Date;
 }
 
 const GuestSchema: Schema = new Schema({
-  name: { type: String, required: true },
-  attending: { type: Boolean, default: null },
-  members: { type: Number, required: true, default: 1 },
-  slug: { type: String, unique: true, sparse: true }, // For personalized URLs
-  category: { type: String }, // e.g., Family, Friends, Co-workers
-  createdAt: { type: Date, default: Date.now },
+  name:           { type: String, required: true },
+  attending:      { type: Boolean, default: null },
+  members:        { type: Number, required: true, default: 1 },
+  slug:           { type: String, unique: true, sparse: true },
+  category:       { type: String },
+  familyCategory: { type: String },
+  side:           { type: String, enum: ["bride", "groom"] },
+  createdAt:      { type: Date, default: Date.now },
 });
 
-// Delete the cached model to force Mongoose to re-compile the schema on hot reload
 delete mongoose.models.Guest;
 export default mongoose.models.Guest || mongoose.model<IGuest>("Guest", GuestSchema);
