@@ -947,7 +947,7 @@ export default function AdminDashboard() {
             placeholder="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className="w-full bg-[#faf7f0] border border-[#e0d4b0] rounded-xl px-4 py-3 mb-3 text-[#3a3020] focus:outline-none focus:border-[#c9a84c] transition-colors text-sm"
+            className=" w-full bg-[#faf7f0] border border-[#e0d4b0] rounded-xl px-4 py-3 mb-3 text-[#3a3020] focus:outline-none focus:border-[#c9a84c] transition-colors text-sm"
           />
           <input
             type="password"
