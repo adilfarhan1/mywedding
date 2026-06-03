@@ -6,12 +6,13 @@ import GiftSection from "@/components/GiftSection";
 import RSVP from "@/components/RSVP";
 import connectDB from "@/lib/mongodb";
 import Guest from "@/models/Guest";
+import DressCode from "@/components/DressCode";
 
 async function getGuestBySlug(slug: string) {
   try {
     await connectDB();
     const guest = await Guest.findOne({ slug });
-    return guest ? guest.name : null;
+    return guest ? { name: guest.name, side: guest.side } : null;
   } catch (e) {
     return null;
   }
@@ -19,25 +20,23 @@ async function getGuestBySlug(slug: string) {
 
 export default async function InvitePage({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = await params;
-  const guestName = await getGuestBySlug(resolvedParams.slug);
+  const guest = await getGuestBySlug(resolvedParams.slug);
 
   return (
     <main className="relative min-h-screen">
       <CanvasBackground />
-      <div className="relative z-10 flex flex-col pb-32">
-        
-       
-
+      <div className="relative z-10 flex flex-col ">
         <div>
-          <GustHero guestName={guestName} />
+          <GustHero guestName={guest?.name ?? null} />
         </div>
-        
+        <RSVP
+          defaultName={guest?.name || ""}
+          defaultSide={guest?.side || null} 
+          slug={resolvedParams.slug}
+        />
         <Countdown />
         <Timeline />
-        
-        {/* Pass the guest name to pre-fill and disable the name input */}
-        <RSVP defaultName={guestName || ""} />
-        
+        <DressCode />
       </div>
     </main>
   );

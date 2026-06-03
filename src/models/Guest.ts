@@ -1,3 +1,4 @@
+// models/Guest.ts
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IGuest extends Document {
@@ -5,9 +6,10 @@ export interface IGuest extends Document {
   attending: boolean | null;
   members: number;
   slug?: string;
-  category?: string;        // Group: Family | Friends | Co-workers | VIP
-  familyCategory?: string;  // Custom family label e.g. "Al-Rashid Family"
-  side?: "bride" | "groom"; // Which side of the wedding
+  category?: string;
+  familyCategory?: string;
+  side?: "bride" | "groom";
+  invited?: boolean;          // ← new: tracks whether invite was physically sent
   createdAt: Date;
 }
 
@@ -19,6 +21,7 @@ const GuestSchema: Schema = new Schema({
   category:       { type: String },
   familyCategory: { type: String },
   side:           { type: String, enum: ["bride", "groom"] },
+  invited:        { type: Boolean, default: false },  
   createdAt:      { type: Date, default: Date.now },
 });
 

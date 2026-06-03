@@ -4,16 +4,24 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, X, Send, Heart, Crown } from "lucide-react";
 import PetalBlast from "./RosePetalBlast";
+import Image from "next/image";
 
 type RSVPProps = {
   defaultName?: string;
+  defaultSide?: "bride" | "groom" | null;  // ← new prop
   slug?: string;
   onSuccess?: () => void;
 };
 
-export default function RSVP({ defaultName = "", slug, onSuccess }: RSVPProps) {
+export default function RSVP({
+  defaultName = "",
+  defaultSide = null,
+  slug,
+  onSuccess,
+}: RSVPProps) {
   const [attending, setAttending] = useState<"yes" | "no" | null>(null);
-  const [side, setSide] = useState<"bride" | "groom" | null>(null);
+  // If side is known from DB, pre-fill and lock it — skip the side-select screen
+  const [side, setSide] = useState<"bride" | "groom" | null>(defaultSide ?? null);
   const [name, setName] = useState(defaultName);
   const [members, setMembers] = useState("1");
   const [submitted, setSubmitted] = useState(false);
@@ -40,18 +48,9 @@ export default function RSVP({ defaultName = "", slug, onSuccess }: RSVPProps) {
         if (attending === "yes") {
           window.dispatchEvent(new CustomEvent("rsvp-confirmed"));
         }
-         // 🌹 trigger petals
-          setShowPetals(true);
-
-          // ⏱️ hide after minute (3000ms)
-          setTimeout(() => {
-            setShowPetals(false);
-          }, 6000);
-
-         // ✅ close popup after short delay (optional but nicer UX)
-        setTimeout(() => {
-          onSuccess?.();
-        }, 800);
+        setShowPetals(true);
+        setTimeout(() => setShowPetals(false), 6000);
+        setTimeout(() => onSuccess?.(), 800);
       } else {
         alert("Something went wrong. Please try again.");
       }
@@ -63,15 +62,39 @@ export default function RSVP({ defaultName = "", slug, onSuccess }: RSVPProps) {
     }
   };
 
+  // Side badge shown on attending question when side is known
+  const SideBadge = () =>
+    side ? (
+      <div className={`inline-flex items-center gap-1.5 text-xs px-3 py-1 rounded-full border mb-4 ${
+        side === "bride"
+          ? "bg-pink-50 border-pink-200 text-pink-500"
+          : "bg-blue-50 border-blue-200 text-blue-500"
+      }`}>
+        {side === "bride" ? <Heart size={11} /> : <Crown size={11} />}
+        {side === "bride" ? "Bride's Side" : "Groom's Side"}
+      </div>
+    ) : null;
+
   return (
-    <section className="relative py-28 px-4 flex items-center justify-center">
+    <section className="relative py-8 px-4 flex items-center justify-center">
       {showPetals && <PetalBlast />}
+            {/* Background */}
+            <div className="absolute inset-0 z-0">
+        <Image
+          src="/texture2.webp"
+          alt="Background"
+          fill
+          priority
+          quality={85}
+          className="object-cover object-top"
+        />
+      </div>
       <div className="w-full max-w-2xl">
         <div className="rounded-3xl p-6 md:p-10 border border-[var(--color-gold)]/30 bg-white backdrop-blur-xl text-center shadow-[0_0_60px_rgba(212,175,55,0.08)]">
 
           <AnimatePresence mode="wait">
 
-            {/* ───── STEP 1: Side Selection ───── */}
+            {/* ───── STEP 1: Side Selection — only shown when side is unknown ───── */}
             {!side && !submitted && (
               <motion.div
                 key="side-select"
@@ -85,7 +108,6 @@ export default function RSVP({ defaultName = "", slug, onSuccess }: RSVPProps) {
                 <p className="text-[#7a6a4a]/60 text-sm mb-8 tracking-wide">
                   Please select which side you are joining us from
                 </p>
-
                 <div className="grid grid-cols-2 gap-5">
                   <button
                     onClick={() => setSide("bride")}
@@ -95,11 +117,10 @@ export default function RSVP({ defaultName = "", slug, onSuccess }: RSVPProps) {
                       <Heart size={20} className="text-pink-400" />
                     </div>
                     <div>
-                      <p className="font-serif text-xl text-pink-600">Bride's Side</p>
+                      <p className="font-serif text-md md:text-xl text-pink-600">Bride's Side</p>
                       <p className="text-xs text-pink-400 mt-0.5 tracking-wider">عروس</p>
                     </div>
                   </button>
-
                   <button
                     onClick={() => setSide("groom")}
                     className="group flex flex-col items-center justify-center gap-3 px-6 py-8 rounded-2xl border-2 border-blue-200 bg-blue-50/50 text-blue-500 hover:bg-blue-100 hover:border-blue-300 transition-all"
@@ -108,7 +129,7 @@ export default function RSVP({ defaultName = "", slug, onSuccess }: RSVPProps) {
                       <Crown size={20} className="text-blue-400" />
                     </div>
                     <div>
-                      <p className="font-serif text-xl text-blue-600">Groom's Side</p>
+                      <p className="font-serif text-md md:text-xl text-blue-600">Groom's Side</p>
                       <p className="text-xs text-blue-400 mt-0.5 tracking-wider">عريس</p>
                     </div>
                   </button>
@@ -116,7 +137,7 @@ export default function RSVP({ defaultName = "", slug, onSuccess }: RSVPProps) {
               </motion.div>
             )}
 
-            {/* ───── STEP 2: Attending Question ───── */}
+            {/* ───── STEP 2: Attending Question — with guest name greeting ───── */}
             {side && !attending && !submitted && (
               <motion.div
                 key="question"
@@ -124,22 +145,23 @@ export default function RSVP({ defaultName = "", slug, onSuccess }: RSVPProps) {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
               >
-                {/* Side badge */}
-                <div className={`inline-flex items-center gap-1.5 text-xs px-3 py-1 rounded-full border mb-6 ${
-                  side === "bride"
-                    ? "bg-pink-50 border-pink-200 text-pink-500"
-                    : "bg-blue-50 border-blue-200 text-blue-500"
-                }`}>
-                  {side === "bride" ? <Heart size={11} /> : <Crown size={11} />}
-                  {side === "bride" ? "Bride's Side" : "Groom's Side"}
-                  <button onClick={() => setSide(null)} className="ml-1 opacity-60 hover:opacity-100 transition">
-                    <X size={10} />
-                  </button>
-                </div>
+                <SideBadge />
 
-                <h2 className="text-3xl md:text-4xl font-serif text-[var(--color-gold)] mb-8">
-                  Are You Attending?
-                </h2>
+                {/* Guest name greeting */}
+                {name && (
+                  <p className="text-[#7a6a4a]/50 text-sm tracking-widest uppercase mb-1">
+                    Dear
+                  </p>
+                )}
+                {name && (
+                  <h2 className="font-serif text-3xl md:text-4xl text-[var(--color-gold)] mb-2 capitalize">
+                    {name}
+                  </h2>
+                )}
+
+                <p className="text-[#7a6a4a]/60 text-sm mb-8 tracking-wide">
+                  Are you attending our Nikah ceremony?
+                </p>
 
                 <div className="flex flex-col sm:flex-row gap-5 justify-center">
                   <button
@@ -149,7 +171,6 @@ export default function RSVP({ defaultName = "", slug, onSuccess }: RSVPProps) {
                     <Check size={18} />
                     Yes, I'll Be There
                   </button>
-
                   <button
                     onClick={() => setAttending("no")}
                     className="px-8 py-4 rounded-full border border-[#F06293]/20 text-[#F06293] bg-[#F06293]/10 hover:border-[#F06293]/50 transition flex items-center justify-center gap-2 uppercase tracking-widest text-sm"
@@ -176,60 +197,77 @@ export default function RSVP({ defaultName = "", slug, onSuccess }: RSVPProps) {
                   <p className="text-[#2D6A4F]/60 text-sm mt-1">We're excited to celebrate with you</p>
                 </div>
 
-                {/* Bride / Groom inline radio */}
-                <div>
-                  <label className="text-xs uppercase tracking-widest text-[var(--color-gold)] block mb-2">
-                    You're attending as
-                  </label>
-                  <div className="grid grid-cols-2 gap-3">
-                    {(["bride", "groom"] as const).map(s => (
-                      <label
-                        key={s}
-                        className={`flex items-center justify-center gap-2 py-2.5 rounded-xl border text-sm cursor-pointer transition ${
-                          side === s
-                            ? s === "bride"
-                              ? "bg-pink-50 border-pink-300 text-pink-600"
-                              : "bg-blue-50 border-blue-300 text-blue-600"
-                            : "border-[#e0d4b0] text-[#b0a080]"
-                        }`}
-                      >
-                        <input type="radio" className="sr-only" value={s} checked={side === s} onChange={() => setSide(s)} />
-                        {s === "bride" ? <Heart size={14} /> : <Crown size={14} />}
-                        {s === "bride" ? "Bride's Side" : "Groom's Side"}
-                      </label>
-                    ))}
+                {/* Only show side switcher if side was NOT pre-filled from DB */}
+                {!defaultSide && (
+                  <div>
+                    <label className="text-xs uppercase tracking-widest text-[var(--color-gold)] block mb-2">
+                      You're attending as
+                    </label>
+                    <div className="grid grid-cols-2 gap-3">
+                      {(["bride", "groom"] as const).map((s) => (
+                        <label
+                          key={s}
+                          className={`flex items-center justify-center gap-2 py-2.5 rounded-xl border text-sm cursor-pointer transition ${
+                            side === s
+                              ? s === "bride"
+                                ? "bg-pink-50 border-pink-300 text-pink-600"
+                                : "bg-blue-50 border-blue-300 text-blue-600"
+                              : "border-[#e0d4b0] text-[#b0a080]"
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            className="sr-only"
+                            value={s}
+                            checked={side === s}
+                            onChange={() => setSide(s)}
+                          />
+                          {s === "bride" ? <Heart size={14} /> : <Crown size={14} />}
+                          {s === "bride" ? "Bride's Side" : "Groom's Side"}
+                        </label>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <div>
                   <label className="text-xs uppercase tracking-widest text-[var(--color-gold)]">Name</label>
                   <input
-                    type="text" required value={name}
-                    onChange={e => setName(e.target.value)}
+                    type="text"
+                    required
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     disabled={!!defaultName}
-                    className="w-full mt-2 px-4 py-3 rounded-xl bg-white/40 border border-[var(--color-gold)] text-[#2D6A4F] focus:border-[var(--color-gold)] outline-none"
+                    className="w-full mt-2 px-4 py-3 rounded-xl bg-white/40 border border-[var(--color-gold)] text-[#2D6A4F] focus:border-[var(--color-gold)] outline-none disabled:opacity-60"
                   />
                 </div>
 
                 <div>
                   <label className="text-xs uppercase tracking-widest text-[var(--color-gold)]">Members</label>
                   <select
-                    value={members} onChange={e => setMembers(e.target.value)}
+                    value={members}
+                    onChange={(e) => setMembers(e.target.value)}
                     className="w-full mt-2 px-4 py-3 rounded-xl bg-white/40 border border-[var(--color-gold)] text-[#2D6A4F] outline-none"
                   >
-                    {[1,2,3,4,5,6,7,8,9,10].map(n => (
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
                       <option key={n} value={n}>{n}</option>
                     ))}
                   </select>
                 </div>
 
                 <div className="flex gap-3 justify-center">
-                  <button type="button" onClick={() => setAttending(null)}
-                    className="px-6 py-3 rounded-full border border-[#544417]/20 text-[#544417]/70 uppercase text-xs">
+                  <button
+                    type="button"
+                    onClick={() => setAttending(null)}
+                    className="px-6 py-3 rounded-full border border-[#544417]/20 text-[#544417]/70 uppercase text-xs"
+                  >
                     Back
                   </button>
-                  <button type="submit" disabled={loading}
-                    className="px-6 py-3 rounded-full bg-[var(--color-gold)] text-black uppercase text-xs flex items-center gap-2">
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="px-6 py-3 rounded-full bg-[var(--color-gold)] text-black uppercase text-xs flex items-center gap-2"
+                  >
                     {loading ? "Sending..." : "Confirm"} <Send size={16} />
                   </button>
                 </div>
@@ -247,38 +285,57 @@ export default function RSVP({ defaultName = "", slug, onSuccess }: RSVPProps) {
               >
                 <h3 className="text-2xl font-serif text-[var(--color-gold)] text-center">We'll Miss You 🤍</h3>
 
-                {/* Bride/Groom radio */}
-                <div className="grid grid-cols-2 gap-3">
-                  {(["bride", "groom"] as const).map(s => (
-                    <label
-                      key={s}
-                      className={`flex items-center justify-center gap-2 py-2.5 rounded-xl border text-sm cursor-pointer transition ${
-                        side === s
-                          ? s === "bride" ? "bg-pink-50 border-pink-300 text-pink-600" : "bg-blue-50 border-blue-300 text-blue-600"
-                          : "border-[#e0d4b0] text-[#b0a080]"
-                      }`}
-                    >
-                      <input type="radio" className="sr-only" value={s} checked={side === s} onChange={() => setSide(s)} />
-                      {s === "bride" ? <Heart size={14} /> : <Crown size={14} />}
-                      {s === "bride" ? "Bride's Side" : "Groom's Side"}
-                    </label>
-                  ))}
-                </div>
+                {/* Only show side switcher if not pre-filled */}
+                {!defaultSide && (
+                  <div className="grid grid-cols-2 gap-3">
+                    {(["bride", "groom"] as const).map((s) => (
+                      <label
+                        key={s}
+                        className={`flex items-center justify-center gap-2 py-2.5 rounded-xl border text-sm cursor-pointer transition ${
+                          side === s
+                            ? s === "bride"
+                              ? "bg-pink-50 border-pink-300 text-pink-600"
+                              : "bg-blue-50 border-blue-300 text-blue-600"
+                            : "border-[#e0d4b0] text-[#b0a080]"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          className="sr-only"
+                          value={s}
+                          checked={side === s}
+                          onChange={() => setSide(s)}
+                        />
+                        {s === "bride" ? <Heart size={14} /> : <Crown size={14} />}
+                        {s === "bride" ? "Bride's Side" : "Groom's Side"}
+                      </label>
+                    ))}
+                  </div>
+                )}
 
                 <input
-                  type="text" required value={name}
-                  onChange={e => setName(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-white/40 border border-[var(--color-gold)] text-[#2D6A4F]"
+                  type="text"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  disabled={!!defaultName}
+                  className="w-full px-4 py-3 rounded-xl bg-white/40 border border-[var(--color-gold)] text-[#2D6A4F] disabled:opacity-60"
                   placeholder="Your Name"
                 />
 
                 <div className="flex gap-3 justify-center">
-                  <button type="button" onClick={() => setAttending(null)}
-                    className="px-6 py-3 rounded-full border border-[#544417]/20 text-[#544417]/70 uppercase text-xs">
+                  <button
+                    type="button"
+                    onClick={() => setAttending(null)}
+                    className="px-6 py-3 rounded-full border border-[#544417]/20 text-[#544417]/70 uppercase text-xs"
+                  >
                     Back
                   </button>
-                  <button type="submit" disabled={loading}
-                    className="px-6 py-3 rounded-full bg-[var(--color-gold)] text-black uppercase text-xs">
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="px-6 py-3 rounded-full bg-[var(--color-gold)] text-black uppercase text-xs"
+                  >
                     {loading ? "Sending..." : "Send"}
                   </button>
                 </div>
@@ -298,7 +355,7 @@ export default function RSVP({ defaultName = "", slug, onSuccess }: RSVPProps) {
                 </div>
                 <p className="text-[var(--color-gold)] text-4xl mb-2">بَارَكَ اللَّهُ فِيكُمْ</p>
                 <p className="text-[#2D6A4F] text-sm mb-1">May Allah bless you</p>
-                <h3 className="text-3xl font-serif text-[var(--color-gold)] mb-3">Thank You, {name}</h3>
+                <h3 className="text-3xl font-serif text-[var(--color-gold)] mb-3 capitalize">Thank You, {name}</h3>
                 <p className="text-[#2D6A4F] text-sm max-w-md">
                   {attending === "yes"
                     ? "Your attendance has been confirmed. We look forward to seeing you."

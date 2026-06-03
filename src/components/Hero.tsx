@@ -306,6 +306,35 @@ export default function Hero() {
         </div>
       </motion.div>
 
+      <p
+                style={{
+                  fontFamily: "var(--font-cinzel)",
+                  fontSize: 9.5,
+                  letterSpacing: "0.28em",
+                  textTransform: "uppercase",
+                  color: "var(--color-emerald-light)",
+                  margin: "16px 0",
+                  textAlign: "center",
+                }}
+              >
+                With Compliments
+              </p>
+
+        <p
+                style={{
+                  fontFamily: "var(--font-garamond)",
+                  fontSize: 13.5,
+                  color: "var(--color-ink-soft)",
+                  lineHeight: 1.3,
+                  opacity: 0.7,
+                  marginBottom: 20,
+                  textAlign: "center",
+                }}
+              >
+                Kaiprath Family & Kottayil Family |
+                Irfana • Muhammed • Rifa • Ziya
+              </p>
+
       {/* Scroll Hint */}
       <div className="scroll-hint mt-10 flex flex-col items-center gap-2">
         <span
@@ -343,6 +372,8 @@ export default function Hero() {
           </circle>
         </svg>
       </div>
+
+    
     </section>
   );
 }

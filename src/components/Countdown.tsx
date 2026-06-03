@@ -112,7 +112,7 @@ END:VCALENDAR`;
       </div>
 
       {/* Timer */}
-      <div className="relative z-20 flex gap-4 md:gap-8 mb-16">
+      <div className="relative z-20 flex gap-4 md:gap-8 mb-9">
         {[
           { label: "Days", value: timeLeft.days },
           { label: "Hours", value: timeLeft.hours },
@@ -138,8 +138,13 @@ END:VCALENDAR`;
         ))}
       </div>
 
+      <p className="relative z-20 mb-5 font-sans text-center text-sm text-[#E4C774] tracking-widest">
+          Please mark this date in your calendar and join us on the wedding day.
+        </p>
+
       {/* Buttons */}
       <div className="relative z-20 flex flex-col sm:flex-row gap-4">
+        
         <button
           onClick={generateICS}
           className="flex items-center gap-2 px-6 py-3 rounded-full border border-[#E4C774] bg-[var(--color-gold)]/10 text-[#E4C774] text-xs uppercase tracking-widest hover:bg-[var(--color-gold)] hover:text-black transition-all duration-300"

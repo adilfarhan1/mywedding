@@ -7,6 +7,7 @@ import Countdown from "@/components/Countdown";
 import Timeline from "@/components/Timeline";
 import RSVP from "@/components/RSVP";
 import RSVPPopup from "@/components/RSVPPopup";
+import DressCode from "@/components/DressCode";
 
 export default function Home() {
   const [showPopup, setShowPopup] = useState(false);
@@ -44,15 +45,10 @@ export default function Home() {
         <RSVP />
         <Countdown />
         <Timeline />
-        
-
-        {/* ✅ IMPORTANT: real ref trigger */}
-        {/* <div ref={triggerRef} className="h-10" /> */}
+        <DressCode />
       </div>
 
-      {/* {showPopup && (
-        <RSVPPopup onClose={() => setShowPopup(false)} />
-      )} */}
+      
     </main>
   );
 }

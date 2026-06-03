@@ -222,7 +222,7 @@ export default function GustHero({ guestName = "" }: GustHeroProps) {
                   fontFamily: "var(--font-cinzel)",
                   fontSize: 9.5,
                   color: "var(--color-emerald-light)",
-                  margin: "16px 0",
+                  margin: "0",
                 }}
               >
                 Honoured Guest
@@ -235,7 +235,6 @@ export default function GustHero({ guestName = "" }: GustHeroProps) {
                   color: "var(--color-ink-soft)",
                   lineHeight: 1.3,
                   opacity: 0.7,
-                  marginBottom: 20,
                   textTransform: "capitalize",
                 }}
               >

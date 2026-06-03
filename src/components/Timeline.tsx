@@ -20,39 +20,45 @@ const timelineEvents = [
   { time: "12:00 PM", title: "Nikah Ceremony", description: "The sacred union.", icon: Heart, emoji: "🤍" },
   { time: "01:00 PM", title: "Bride Entry", description: "Walking into a new chapter.", icon: Sparkles, emoji: "🌸" },
   { time: "01:15 PM", title: "Couple on Stage", description: "Blessings and photos.", icon: Music, emoji: "✨" },
-  { time: "01:30 PM", title: "Royal Feast", description: "Lunch is served.", icon: Utensils, emoji: "🍽️" },
+  { time: "01:30 PM", title: "Mutti Pattu", description: "A joyful traditional celebration.", icon: Music, emoji: "🥁" },
+  { time: "12:30 PM", title: "Royal Feast", description: "Lunch is served.", icon: Utensils, emoji: "🍽️" },
   { time: "03:00 PM", title: "Cake Cutting", description: "Sweet beginnings.", icon: GlassWater, emoji: "🎂" },
 ];
 
+
 export default function Timeline() {
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
-// useEffect(() => {
-//   if (!containerRef.current) return;
+  useEffect(() => {
+    if (!containerRef.current) return;
 
-//   const items = containerRef.current.querySelectorAll<HTMLElement>(
-//     ".timeline-item"
-//   );
+    const items = containerRef.current.querySelectorAll<HTMLElement>(
+      ".timeline-item"
+    );
 
-//   items.forEach((item) => {
-//     gsap.fromTo(
-//       item,
-//       { opacity: 0, y: 60, scale: 0.92 },
-//       {
-//         opacity: 1,
-//         y: 0,
-//         scale: 1,
-//         duration: 0.9,
-//         ease: "power3.out",
-//         scrollTrigger: {
-//           trigger: item,
-//           start: "top 85%",
-//           toggleActions: "play none none reverse",
-//         },
-//       }
-//     );
-//   });
-// }, []);
+    items.forEach((item) => {
+      gsap.fromTo(
+        item,
+        { opacity: 0, y: 60, scale: 0.92 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.9,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: item,
+            start: "top 85%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+    });
+
+    return () => {
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
+  }, []);
 
   return (
     <section
