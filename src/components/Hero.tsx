@@ -111,7 +111,6 @@ export default function Hero() {
                 style={{
                   fontFamily: "var(--font-cinzel)",
                   fontSize: 9.5,
-                  letterSpacing: "0.28em",
                   textTransform: "uppercase",
                   color: "var(--color-emerald-light)",
                   margin: "16px 0",
