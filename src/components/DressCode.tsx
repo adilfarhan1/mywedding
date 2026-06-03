@@ -306,7 +306,7 @@ export default function DressCode() {
           >
             Above all, your presence is the greatest adornment of our day.
             <br />
-            <span style={{ color: "#c9a84c", fontSize: 50 }}>بَارَكَ اللَّهُ فِيكُمْ</span>
+            <span className="text-[2rem] md:text-[3rem]" style={{ color: "#c9a84c", }}>بَارَكَ اللَّهُ فِيكُمْ</span>
           </p>
         </div>
 

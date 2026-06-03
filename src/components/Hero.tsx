@@ -323,13 +323,13 @@ export default function Hero() {
         <p
                 style={{
                   fontFamily: "var(--font-garamond)",
-                  fontSize: 13.5,
                   color: "var(--color-ink-soft)",
                   lineHeight: 1.3,
                   opacity: 0.7,
                   marginBottom: 20,
                   textAlign: "center",
                 }}
+                className=" text-xs md:text-sm"
               >
                 Kaiprath Family & Kottayil Family |
                 Irfana • Muhammed • Rifa • Ziya
