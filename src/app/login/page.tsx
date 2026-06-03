@@ -224,87 +224,164 @@ const shareWhatsApp = async () => {
   }
   await document.fonts.load("400 30px 'Rouge Script'");
 
+  // ── Canvas ───────────────────────────────────────────
   const W = 480;
-  const H = 680;
-  const offscreen = document.createElement("canvas");
-  offscreen.width = W;
-  offscreen.height = H;
-  const ctx = offscreen.getContext("2d")!;
+  const H = 660;
 
+  const canvas = document.createElement("canvas");
+  canvas.width = W;
+  canvas.height = H;
+
+  const ctx = canvas.getContext("2d")!;
+
+  // ── Background ───────────────────────────────────────────
   ctx.fillStyle = "#faf7f0";
   ctx.fillRect(0, 0, W, H);
-  const cx = W / 2;
-  const cy = H / 2;
-  const radius = Math.min(W, H) / 2 - 12;
-  ctx.strokeStyle = "#c9a84c";
-  ctx.lineWidth = 3;
-  ctx.beginPath(); ctx.arc(cx, cy, radius, 0, Math.PI * 2); ctx.stroke();
-  ctx.strokeStyle = "rgba(201,168,76,0.4)";
+
+  // soft gradient overlay
+  const gradient = ctx.createLinearGradient(0, 0, W, H);
+  gradient.addColorStop(0, "rgba(27, 67, 50, 0.08)");
+  gradient.addColorStop(0.5, "rgba(201, 168, 76, 0.05)");
+  gradient.addColorStop(1, "rgba(250, 247, 240, 0.9)");
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, W, H);
+
+  // ── DOUBLE BORDER FRAME ───────────────────────────────
+  const pad = 18;
+
+  // outer border
+  ctx.strokeStyle = "rgba(201,168,76,0.35)";
+  ctx.lineWidth = 2;
+  ctx.strokeRect(pad, pad, W - pad * 2, H - pad * 2);
+
+  // inner border
+  const pad2 = 28;
+  ctx.strokeStyle = "rgba(201,168,76,0.2)";
   ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.arc(cx, cy, radius - 9, 0, Math.PI * 2); ctx.stroke();
-  ctx.save();
-  ctx.beginPath(); ctx.arc(cx, cy, radius - 3, 0, Math.PI * 2); ctx.clip();
-  ctx.fillStyle = "#faf7f0"; ctx.fillRect(0, 0, W, H);
+  ctx.strokeRect(pad2, pad2, W - pad2 * 2, H - pad2 * 2);
+
   ctx.textAlign = "center";
-  const topOfCircle = cy - radius + 3;
-  ctx.fillStyle = "#c9a84c"; ctx.font = "13px serif";
-  ctx.fillText("✦", W / 2, topOfCircle + 36);
-  const name1Y = topOfCircle + 72;
-  const ampY   = name1Y + 22;
-  const name2Y = ampY + 22;
-  ctx.fillStyle = "#c9a84c"; ctx.font = "400 30px 'Rouge Script', cursive";
-  ctx.fillText("Adil Farhan", W / 2, name1Y);
-  const ruleY = ampY - 5;
-  ctx.strokeStyle = "rgba(201,168,76,0.35)"; ctx.lineWidth = 0.8;
-  ctx.beginPath(); ctx.moveTo(110, ruleY); ctx.lineTo(205, ruleY); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(275, ruleY); ctx.lineTo(370, ruleY); ctx.stroke();
-  ctx.fillStyle = "#a08850"; ctx.font = "italic 14px serif";
-  ctx.fillText("&", W / 2, ampY);
-  ctx.fillStyle = "#c9a84c"; ctx.font = "400 30px 'Rouge Script', cursive";
-  ctx.fillText("Lubna Nasrin", W / 2, name2Y);
-  const divY = name2Y + 22;
-  ctx.fillStyle = "rgba(201,168,76,0.7)"; ctx.font = "10px serif";
-  ctx.fillText("— ✦ —", W / 2, divY);
-  const qrSize = 185;
-  const qrX = (W - qrSize) / 2;
-  const qrY = divY + 16;
-  ctx.fillStyle = "#ffffff";
-  ctx.shadowColor = "rgba(180,150,80,0.15)"; ctx.shadowBlur = 14;
-  roundRect(ctx, qrX - 12, qrY - 12, qrSize + 24, qrSize + 24, 12); ctx.fill();
-  ctx.shadowBlur = 0;
-  ctx.strokeStyle = "rgba(201,168,76,0.3)"; ctx.lineWidth = 1;
-  roundRect(ctx, qrX - 12, qrY - 12, qrSize + 24, qrSize + 24, 12); ctx.stroke();
-  ctx.drawImage(canvasRef.current, qrX, qrY, qrSize, qrSize);
-  const msgY = qrY + qrSize + 20;
-  ctx.fillStyle = "#9a8860"; ctx.font = "italic 11px serif";
-  ctx.fillText("Scan to confirm your attendance", W / 2, msgY);
-  const ruleLineY = msgY + 16;
-  ctx.strokeStyle = "rgba(201,168,76,0.35)"; ctx.lineWidth = 0.8;
-  ctx.beginPath(); ctx.moveTo(100, ruleLineY); ctx.lineTo(W - 100, ruleLineY); ctx.stroke();
-  const guestNameY = ruleLineY + 30;
-  ctx.fillStyle = "#3a3020"; ctx.font = "bold 22px serif";
-  ctx.fillText(guest.name.toUpperCase(), W / 2, guestNameY);
-  const categoryText = (guest.familyCategory || guest.category || "").toUpperCase();
-  const guestLabelY = guestNameY + 22;
-  if (categoryText) {
-    ctx.font = "bold 9px sans-serif";
-    const badgeW = ctx.measureText(categoryText).width + 20;
-    const badgeH = 16;
-    const badgeX = W / 2 - badgeW / 2;
-    const badgeY = guestLabelY - 12;
-    ctx.fillStyle = "rgba(201,168,76,0.15)";
-    roundRect(ctx, badgeX, badgeY, badgeW, badgeH, 8); ctx.fill();
-    ctx.strokeStyle = "rgba(201,168,76,0.4)"; ctx.lineWidth = 0.8;
-    roundRect(ctx, badgeX, badgeY, badgeW, badgeH, 8); ctx.stroke();
-    ctx.fillStyle = "#a08040"; ctx.letterSpacing = "1.5px";
-    ctx.fillText(categoryText, W / 2, guestLabelY);
-    ctx.letterSpacing = "0px";
-  } else {
-    ctx.fillStyle = "#c0a870"; ctx.font = "9px sans-serif";
-    ctx.letterSpacing = "2px";
-    ctx.fillText("GUEST", W / 2, guestLabelY);
-    ctx.letterSpacing = "0px";
-  }
+
+  // ── START CONTENT AREA (SHIFTED DOWN FOR BALANCE) ───────
+  let y = 70;
+
+  // Bismillah
+  ctx.fillStyle = "#1b4332";
+  ctx.font = "18px serif";
+  ctx.fillText("بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ", W / 2, y);
+
+  y += 30;
+
+  ctx.fillStyle = "#6a5a40";
+  ctx.font = "10px serif";
+  ctx.fillText("With the blessings of Almighty Allah", W / 2, y);
+
+  // Parents
+  y += 40;
+
+  ctx.fillStyle = "rgba(58,48,32,0.75)";
+  ctx.font = "12px serif";
+  ctx.fillText("Mr. Ibrahim & Mrs. Naseema", W / 2, y);
+
+  y += 18;
+  ctx.fillText("together with", W / 2, y);
+
+  y += 18;
+  ctx.fillText("Mr. Riyas & Mrs. Rahana", W / 2, y);
+
+  // Invitation line
+  y += 30;
+
+  ctx.fillStyle = "#2d2a26";
+  ctx.font = "10px serif";
+  ctx.fillText("warmly invite you to the Nikah ceremony", W / 2, y);
+
+  // Title
+  y += 40;
+
+  ctx.fillStyle = "#1b4332";
+  ctx.font = "bold 18px serif";
+  ctx.fillText("Wedding Invitation", W / 2, y);
+
+  // Couple names
+  y += 70;
+
+  ctx.fillStyle = "#1b4332";
+  ctx.font = "400 34px 'Rouge Script', cursive";
+  ctx.fillText("Adil Farhan", W / 2, y);
+
+  y += 30;
+
+  ctx.fillStyle = "#c9a84c";
+  ctx.font = "18px serif";
+  ctx.fillText("&", W / 2, y);
+
+  y += 35;
+
+  ctx.fillStyle = "#1b4332";
+  ctx.font = "400 34px 'Rouge Script', cursive";
+  ctx.fillText("Lubna Nasrin", W / 2, y);
+
+ // ── Save the Date ────────────────────────────────────
+  y += 45;
+
+  ctx.fillStyle = "#6a5a40";
+  ctx.font = "italic 12px serif";
+  ctx.fillText("Save the Date", W / 2, y);
+
+  // ── Divider line ─────────────────────────────────────
+  y += 20;
+
+  ctx.strokeStyle = "rgba(201,168,76,0.3)";
+  ctx.beginPath();
+  ctx.moveTo(90, y);
+  ctx.lineTo(W - 90, y);
+  ctx.stroke();
+
+  // ── Date + Time (FIXED) ─────────────────────────────
+  y += 25;
+
+  ctx.fillStyle = "#c9a84c";
+  ctx.font = "10px serif";
+  ctx.fillText("NIKAH", W / 2 - 80, y - 10);
+
+  ctx.fillStyle = "#1b4332";
+  ctx.font = "14px serif";
+  ctx.fillText("11:30 AM", W / 2 - 80, y + 10);
+
+  ctx.fillStyle = "#c9a84c";
+  ctx.fillText("DATE", W / 2 + 80, y - 10);
+
+  ctx.fillStyle = "#1b4332";
+  ctx.fillText("22 Nov 2026", W / 2 + 80, y + 10);
+
+  // ── Move down properly ───────────────────────────────
+  y += 60;
+
+  // ── Guest Name (FIXED ALIGNMENT) ─────────────────────
+  ctx.fillStyle = "#2d2a26";
+  ctx.font = "bold 20px serif";
+  ctx.fillText(guest.name.toUpperCase(), W / 2, y);
+
+  y += 20;
+
+  ctx.fillStyle = "#c9a84c";
+  ctx.font = "9px sans-serif";
+  ctx.fillText("GUEST", W / 2, y);
+
+  // Venue
+  y += 60;
+
+  ctx.fillStyle = "#1b4332";
+  ctx.font = "16px serif";
+  ctx.fillText("Athafy Auditorium", W / 2, y);
+
+  y += 22;
+
+  ctx.fillStyle = "#6a5a40";
+  ctx.font = "12px serif";
+  ctx.fillText("Vadakara, Vallikkad Road", W / 2, y);
+
   ctx.restore();
 
   // ── Compose the message ────────────────────────────────────────────────
@@ -323,9 +400,12 @@ const shareWhatsApp = async () => {
     `We look forward to celebrating this joyful occasion with you and your family. 🤍`;
 
   // ── Convert canvas to File ─────────────────────────────────────────────
-  const blob = await new Promise<Blob>((resolve, reject) =>
-    offscreen.toBlob((b) => (b ? resolve(b) : reject(new Error("Canvas toBlob failed"))), "image/png")
-  );
+const blob = await new Promise<Blob>((resolve, reject) =>
+  canvas.toBlob(
+    (b) => (b ? resolve(b) : reject(new Error("Canvas toBlob failed"))),
+    "image/png"
+  )
+);
   const imageFile = new File(
     [blob],
     `invite-${guest.slug || guest.name}.png`,
@@ -349,7 +429,7 @@ const shareWhatsApp = async () => {
   // ── Desktop fallback: save image + open WhatsApp text ─────────────────
   // Step 1: auto-download the image so the user has it ready
   const imgLink = document.createElement("a");
-  imgLink.href = offscreen.toDataURL("image/png");
+  imgLink.href = canvas.toDataURL("image/png");
   imgLink.download = `invite-${guest.slug || guest.name}.png`;
   imgLink.click();
 
