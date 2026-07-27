@@ -23,6 +23,7 @@
 :root {
   --background: #FAF7F0;
   --foreground: #1A1410;
+  color-scheme: light only;
 }
 
 body {

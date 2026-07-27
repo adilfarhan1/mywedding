@@ -23,7 +23,7 @@ export default function RSVP({
   // If side is known from DB, pre-fill and lock it — skip the side-select screen
   const [side, setSide] = useState<"bride" | "groom" | null>(defaultSide ?? null);
   const [name, setName] = useState(defaultName);
-  const [members, setMembers] = useState("1");
+  const members = "1";
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showPetals, setShowPetals] = useState(false);
@@ -240,19 +240,6 @@ export default function RSVP({
                     disabled={!!defaultName}
                     className="w-full mt-2 px-4 py-3 rounded-xl bg-white/40 border border-[var(--color-gold)] text-[#2D6A4F] focus:border-[var(--color-gold)] outline-none disabled:opacity-60"
                   />
-                </div>
-
-                <div>
-                  <label className="text-xs uppercase tracking-widest text-[var(--color-gold)]">Members</label>
-                  <select
-                    value={members}
-                    onChange={(e) => setMembers(e.target.value)}
-                    className="w-full mt-2 px-4 py-3 rounded-xl bg-white/40 border border-[var(--color-gold)] text-[#2D6A4F] outline-none"
-                  >
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
-                      <option key={n} value={n}>{n}</option>
-                    ))}
-                  </select>
                 </div>
 
                 <div className="flex gap-3 justify-center">

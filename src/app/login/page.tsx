@@ -224,9 +224,9 @@ const shareWhatsApp = async () => {
   }
   await document.fonts.load("400 30px 'Rouge Script'");
 
-  // ── Canvas ───────────────────────────────────────────
-  const W = 480;
-  const H = 660;
+  // ── Canvas (square 1:1) ─────────────────────────────
+  const W = 600;
+  const H = 600;
 
   const canvas = document.createElement("canvas");
   canvas.width = W;
@@ -234,153 +234,88 @@ const shareWhatsApp = async () => {
 
   const ctx = canvas.getContext("2d")!;
 
-  // ── Background ───────────────────────────────────────────
-  ctx.fillStyle = "#faf7f0";
+  // ── Classic rose-toned background ───────────────────────────────────────
+  const bgGrad = ctx.createLinearGradient(0, 0, W, H);
+  bgGrad.addColorStop(0, "#FFE1EE");
+  bgGrad.addColorStop(0.55, "#F5A9C6");
+  bgGrad.addColorStop(1, "#7A2045");
+  ctx.fillStyle = bgGrad;
   ctx.fillRect(0, 0, W, H);
 
-  // soft gradient overlay
-  const gradient = ctx.createLinearGradient(0, 0, W, H);
-  gradient.addColorStop(0, "rgba(27, 67, 50, 0.08)");
-  gradient.addColorStop(0.5, "rgba(201, 168, 76, 0.05)");
-  gradient.addColorStop(1, "rgba(250, 247, 240, 0.9)");
-  ctx.fillStyle = gradient;
+  // Rose blooms in opposite corners
+  drawRoseBloom(ctx, 92, 92, 1, 0);
+  drawRoseBloom(ctx, W - 92, H - 92, 1.1, 20);
+
+  // A few loose accent petals near the other two corners
+  drawPetal(ctx, W - 70, 60, (-40 * Math.PI) / 180, 30, 13, "#FF8AAD", 0.85);
+  drawPetal(ctx, W - 42, 96, (10 * Math.PI) / 180, 24, 11, "#C12664", 0.8);
+  drawPetal(ctx, 60, H - 70, (140 * Math.PI) / 180, 30, 13, "#FF8AAD", 0.85);
+  drawPetal(ctx, 96, H - 42, (190 * Math.PI) / 180, 24, 11, "#C12664", 0.8);
+
+  // Soft ivory vignette so the centre stays legible
+  const vignette = ctx.createRadialGradient(W / 2, H / 2, H * 0.1, W / 2, H / 2, H * 0.44);
+  vignette.addColorStop(0, "rgba(250,247,240,0.95)");
+  vignette.addColorStop(1, "rgba(250,247,240,0)");
+  ctx.fillStyle = vignette;
   ctx.fillRect(0, 0, W, H);
 
   // ── DOUBLE BORDER FRAME ───────────────────────────────
-  const pad = 18;
+  const pad = 20;
 
   // outer border
-  ctx.strokeStyle = "rgba(201,168,76,0.35)";
+  ctx.strokeStyle = "rgba(201,168,76,0.45)";
   ctx.lineWidth = 2;
   ctx.strokeRect(pad, pad, W - pad * 2, H - pad * 2);
 
   // inner border
-  const pad2 = 28;
-  ctx.strokeStyle = "rgba(201,168,76,0.2)";
+  const pad2 = 32;
+  ctx.strokeStyle = "rgba(201,168,76,0.25)";
   ctx.lineWidth = 1;
   ctx.strokeRect(pad2, pad2, W - pad2 * 2, H - pad2 * 2);
 
   ctx.textAlign = "center";
 
-  // ── START CONTENT AREA (SHIFTED DOWN FOR BALANCE) ───────
-  let y = 70;
+  // ── CONTENT — names & attractive wording only ───────────
+  let y = 200;
 
   // Bismillah
   ctx.fillStyle = "#1b4332";
-  ctx.font = "18px serif";
+  ctx.font = "20px serif";
   ctx.fillText("بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ", W / 2, y);
 
-  y += 30;
-
-  ctx.fillStyle = "#6a5a40";
-  ctx.font = "10px serif";
-  ctx.fillText("With the blessings of Almighty Allah", W / 2, y);
-
-  // Parents
-  y += 40;
-
-  ctx.fillStyle = "rgba(58,48,32,0.75)";
-  ctx.font = "12px serif";
-  ctx.fillText("Mr. Ibrahim & Mrs. Naseema", W / 2, y);
-
-  y += 18;
-  ctx.fillText("together with", W / 2, y);
-
-  y += 18;
-  ctx.fillText("Mr. Riyas & Mrs. Rahana", W / 2, y);
-
-  // Invitation line
-  y += 30;
-
-  ctx.fillStyle = "#2d2a26";
-  ctx.font = "10px serif";
-  ctx.fillText("warmly invite you to the Nikah ceremony", W / 2, y);
-
-  // Title
-  y += 40;
-
-  ctx.fillStyle = "#1b4332";
-  ctx.font = "bold 18px serif";
-  ctx.fillText("Wedding Invitation", W / 2, y);
+  // Tagline
+  y += 36;
+  ctx.fillStyle = "#a8143f";
+  ctx.font = "11px 'Cinzel', serif";
+  ctx.letterSpacing = "3px";
+  ctx.fillText("TWO HEARTS · ONE BEGINNING", W / 2, y);
+  ctx.letterSpacing = "0px";
 
   // Couple names
-  y += 70;
-
-  ctx.fillStyle = "#1b4332";
-  ctx.font = "400 34px 'Rouge Script', cursive";
+  y += 84;
+  ctx.fillStyle = "#5c1533";
+  ctx.font = "400 50px 'Rouge Script', cursive";
   ctx.fillText("Adil Farhan", W / 2, y);
 
-  y += 30;
-
+  y += 40;
+  ctx.strokeStyle = "rgba(201,168,76,0.5)";
+  ctx.lineWidth = 0.8;
+  ctx.beginPath(); ctx.moveTo(W / 2 - 110, y - 6); ctx.lineTo(W / 2 - 30, y - 6); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(W / 2 + 30, y - 6); ctx.lineTo(W / 2 + 110, y - 6); ctx.stroke();
   ctx.fillStyle = "#c9a84c";
-  ctx.font = "18px serif";
+  ctx.font = "italic 18px serif";
   ctx.fillText("&", W / 2, y);
 
-  y += 35;
-
-  ctx.fillStyle = "#1b4332";
-  ctx.font = "400 34px 'Rouge Script', cursive";
+  y += 46;
+  ctx.fillStyle = "#5c1533";
+  ctx.font = "italic 400 50px 'Rouge Script', cursive";
   ctx.fillText("Lubna Nasrin", W / 2, y);
 
- // ── Save the Date ────────────────────────────────────
+  // Closing flourish
   y += 45;
-
-  ctx.fillStyle = "#6a5a40";
-  ctx.font = "italic 12px serif";
-  ctx.fillText("Save the Date", W / 2, y);
-
-  // ── Divider line ─────────────────────────────────────
-  y += 20;
-
-  ctx.strokeStyle = "rgba(201,168,76,0.3)";
-  ctx.beginPath();
-  ctx.moveTo(90, y);
-  ctx.lineTo(W - 90, y);
-  ctx.stroke();
-
-  // ── Date + Time (FIXED) ─────────────────────────────
-  y += 25;
-
-  ctx.fillStyle = "#c9a84c";
-  ctx.font = "10px serif";
-  ctx.fillText("NIKAH", W / 2 - 80, y - 10);
-
-  ctx.fillStyle = "#1b4332";
+  ctx.fillStyle = "rgba(201,168,76,0.7)";
   ctx.font = "14px serif";
-  ctx.fillText("11:30 AM", W / 2 - 80, y + 10);
-
-  ctx.fillStyle = "#c9a84c";
-  ctx.fillText("DATE", W / 2 + 80, y - 10);
-
-  ctx.fillStyle = "#1b4332";
-  ctx.fillText("22 Nov 2026", W / 2 + 80, y + 10);
-
-  // ── Move down properly ───────────────────────────────
-  y += 60;
-
-  // ── Guest Name (FIXED ALIGNMENT) ─────────────────────
-  ctx.fillStyle = "#2d2a26";
-  ctx.font = "bold 20px serif";
-  ctx.fillText(guest.name.toUpperCase(), W / 2, y);
-
-  y += 20;
-
-  ctx.fillStyle = "#c9a84c";
-  ctx.font = "9px sans-serif";
-  ctx.fillText("GUEST", W / 2, y);
-
-  // Venue
-  y += 60;
-
-  ctx.fillStyle = "#1b4332";
-  ctx.font = "16px serif";
-  ctx.fillText("Athafy Auditorium", W / 2, y);
-
-  y += 22;
-
-  ctx.fillStyle = "#6a5a40";
-  ctx.font = "12px serif";
-  ctx.fillText("Vadakara, Vallikkad Road", W / 2, y);
+  ctx.fillText("✦ ❧ ✦", W / 2, y);
 
   ctx.restore();
 
@@ -507,6 +442,82 @@ function roundRect(
   ctx.lineTo(x, y + r);
   ctx.arcTo(x, y, x + r, y, r);
   ctx.closePath();
+}
+
+// Helper: a single rose-petal shape pointing outward from (cx, cy) at `angle` radians
+function drawPetal(
+  ctx: CanvasRenderingContext2D,
+  cx: number,
+  cy: number,
+  angle: number,
+  length: number,
+  width: number,
+  color: string,
+  alpha = 1
+) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(angle);
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.bezierCurveTo(width, length * 0.25, width * 0.6, length * 0.85, 0, length);
+  ctx.bezierCurveTo(-width * 0.6, length * 0.85, -width, length * 0.25, 0, 0);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+}
+
+// Helper: a classic layered rose bloom, built from three rings of petals
+function drawRoseBloom(
+  ctx: CanvasRenderingContext2D,
+  cx: number,
+  cy: number,
+  scale = 1,
+  rotationDeg = 0
+) {
+  const rot = (rotationDeg * Math.PI) / 180;
+  const toRad = (deg: number) => (deg * Math.PI) / 180;
+
+  // outer ring — palest petals
+  const outerCount = 8;
+  for (let i = 0; i < outerCount; i++) {
+    drawPetal(
+      ctx, cx, cy,
+      rot + toRad((360 / outerCount) * i),
+      46 * scale, 20 * scale,
+      "#FFC1E3", 0.9
+    );
+  }
+
+  // middle ring — blush/crimson
+  const midCount = 6;
+  for (let i = 0; i < midCount; i++) {
+    drawPetal(
+      ctx, cx, cy,
+      rot + toRad(30 + (360 / midCount) * i),
+      33 * scale, 16 * scale,
+      i % 2 === 0 ? "#FF8AAD" : "#FF5B84", 0.92
+    );
+  }
+
+  // inner ring — deep rose
+  const innerCount = 5;
+  for (let i = 0; i < innerCount; i++) {
+    drawPetal(
+      ctx, cx, cy,
+      rot + toRad(15 + (360 / innerCount) * i),
+      20 * scale, 11 * scale,
+      i % 2 === 0 ? "#A73060" : "#C12664", 0.95
+    );
+  }
+
+  // centre
+  ctx.beginPath();
+  ctx.fillStyle = "#5C1533";
+  ctx.arc(cx, cy, 6 * scale, 0, Math.PI * 2);
+  ctx.fill();
 }
 
 // ─── Family Category Modal ─────────────────────────────────────────────────────

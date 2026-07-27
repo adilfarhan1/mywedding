@@ -16,14 +16,16 @@ export default function AudioPlayer() {
     audio.volume = 0.45;
     audioRef.current = audio;
 
-    const handleRSVP = () => {
+    const handleStart = () => {
       setVisible(true);
       audio.play().then(() => setPlaying(true)).catch(() => {});
     };
 
-    window.addEventListener("rsvp-confirmed", handleRSVP);
+    window.addEventListener("rsvp-confirmed", handleStart);
+    window.addEventListener("invitation-opened", handleStart);
     return () => {
-      window.removeEventListener("rsvp-confirmed", handleRSVP);
+      window.removeEventListener("rsvp-confirmed", handleStart);
+      window.removeEventListener("invitation-opened", handleStart);
       audio.pause();
     };
   }, []);

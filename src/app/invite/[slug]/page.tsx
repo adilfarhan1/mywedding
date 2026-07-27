@@ -1,12 +1,6 @@
-import CanvasBackground from "@/components/CanvasBackground";
-import GustHero from "@/components/GustHero";
-import Countdown from "@/components/Countdown";
-import Timeline from "@/components/Timeline";
-import GiftSection from "@/components/GiftSection";
-import RSVP from "@/components/RSVP";
 import connectDB from "@/lib/mongodb";
 import Guest from "@/models/Guest";
-import DressCode from "@/components/DressCode";
+import GuestInviteClient from "@/components/GuestInviteClient";
 
 async function getGuestBySlug(slug: string) {
   try {
@@ -23,21 +17,10 @@ export default async function InvitePage({ params }: { params: Promise<{ slug: s
   const guest = await getGuestBySlug(resolvedParams.slug);
 
   return (
-    <main className="relative min-h-screen">
-      <CanvasBackground />
-      <div className="relative z-10 flex flex-col ">
-        <div>
-          <GustHero guestName={guest?.name ?? null} />
-        </div>
-        <RSVP
-          defaultName={guest?.name || ""}
-          defaultSide={guest?.side || null} 
-          slug={resolvedParams.slug}
-        />
-        <Countdown />
-        <Timeline />
-        <DressCode />
-      </div>
-    </main>
+    <GuestInviteClient
+      guestName={guest?.name ?? undefined}
+      guestSide={guest?.side ?? null}
+      slug={resolvedParams.slug}
+    />
   );
 }

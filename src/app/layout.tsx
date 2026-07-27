@@ -31,6 +31,9 @@ const rouge = Rouge_Script({
 export const metadata: Metadata = {
   title: "Wedding Invitation — Adil & Lubna",
   description: "You are joyfully invited to our Nikah celebration.",
+  other: {
+    "color-scheme": "light",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
