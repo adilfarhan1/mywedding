@@ -91,7 +91,7 @@ body {
 
 /* ── ARABIC CALLIGRAPHY ── */
 .calligraphy {
-  font-family: var(--font-arabic), serif;
+  font-family: var(--font-bismillah), var(--font-arabic), serif;
   line-height: 1.8;
   text-align: center;
   direction: rtl;

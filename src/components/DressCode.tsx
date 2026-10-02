@@ -12,13 +12,11 @@ const femaleSwatches = [
 ];
 
 const maleSwatches = [
-  { hex: "#03045E", name: "Dark Blue" },
-  { hex: "#0078B7", name: "Strong Blue" },
-  { hex: "#00B4D7", name: "Sparkling Cyan" },
-  { hex: "#92DFEF", name: "Sky Blue" },
-  { hex: "#CAF1F8", name: "Baby Blue" },
-  { hex: "#FFFFFF", name: "Pure white" },
-  
+  { hex: "#000000", name: "Black" },
+  { hex: "#38220F", name: "Espresso Brown" },
+  { hex: "#634832", name: "Walnut Brown" },
+  { hex: "#ECE0D1", name: "Warm Sand" },
+  { hex: "#FFFFFF", name: "Pure White" },
 ];
 
 function SwatchStrip({
@@ -31,7 +29,7 @@ function SwatchStrip({
   delay?: number;
 }) {
   return (
-    <div className="flex items-stretch gap-0 w-full overflow-hidden rounded-xl">
+    <div className="flex items-stretch gap-0 w-full overflow-hidden rounded-xl border border-black/10">
       {swatches.map((s, i) => (
         <div
           key={s.hex}
@@ -230,13 +228,13 @@ export default function DressCode() {
               overflow: "hidden",
             }}
           >
-            <div className="h-0.5 w-full" style={{ background: "linear-gradient(to right, #2081C5, #4DAACC, #77D5D7, #B7E7E7, #F7F9F8)" }} />
+            <div className="h-0.5 w-full" style={{ background: "linear-gradient(to right, #000000, #38220F, #634832, #ECE0D1, #FFFFFF)" }} />
 
             <div className="px-7 pt-6 pb-7">
               <div className="flex items-center gap-2.5 mb-5">
                 <div
                   className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: "#eef6fc", border: "1px solid #b0d8ec" }}
+                  style={{ backgroundColor: "#f2ede6", border: "1px solid #c9b7a3" }}
                 >
                   <span style={{ fontSize: 13 }}>🤍</span>
                 </div>
@@ -248,9 +246,9 @@ export default function DressCode() {
                     For the Gentlemen
                   </p>
                   <p
-                    style={{ fontFamily: "Georgia, serif", fontSize: 17, color: "#1a6090", fontWeight: 400, lineHeight: 1.1 }}
+                    style={{ fontFamily: "Georgia, serif", fontSize: 17, color: "#38220F", fontWeight: 400, lineHeight: 1.1 }}
                   >
-                    Azure &amp; Sky Palette
+                    Espresso &amp; Ivory Palette
                   </p>
                 </div>
               </div>
@@ -275,11 +273,11 @@ export default function DressCode() {
                 style={{
                   fontFamily: "Georgia, serif",
                   fontStyle: "italic",
-                  color: "#4878a0",
+                  color: "#7a6450",
                   fontSize: 12.5,
                 }}
               >
-                From rich royal blue to crisp ivory — shirts, sherwanis, suits
+                From deep espresso and walnut to crisp ivory — shirts, sherwanis, suits
                 and all formal attire are most welcome.
               </p>
             </div>

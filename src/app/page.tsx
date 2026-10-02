@@ -8,6 +8,7 @@ import Countdown from "@/components/Countdown";
 import Timeline from "@/components/Timeline";
 import RSVP from "@/components/RSVP";
 import DressCode from "@/components/DressCode";
+import Wishes from "@/components/Wishes";
 import InviteCover from "@/components/InviteCover";
 
 export default function Home() {
@@ -33,6 +34,7 @@ export default function Home() {
           <Countdown />
           <Timeline />
           <DressCode />
+          <Wishes />
         </div>
       )}
     </main>

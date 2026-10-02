@@ -5,9 +5,11 @@ import {
   Users, Clock, Link as LinkIcon,
   Download, Search, Plus, X,
   Tag, Trash2, Check, Crown, Heart, Share2, RefreshCw,
-  Trash2Icon
+  Trash2Icon, MessageSquareHeart, Quote
 } from "lucide-react";
 import QRCode from "qrcode";
+
+const SOCIAL_SHARE_IMAGE = "/social-share.png";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type Guest = {
@@ -24,11 +26,11 @@ type Guest = {
 };
 
 type FamilyCategory = { _id: string; name: string; side: "bride" | "groom" };
+type Wish = { _id: string; name: string; message: string; createdAt: string };
 
 // ─── QR Modal ─────────────────────────────────────────────────────────────────
 function QRModal({ guest, onClose }: { guest: Guest; onClose: () => void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [downloading, setDownloading] = useState(false);
   const url =
     typeof window !== "undefined"
       ? `${window.location.origin}/invite/${guest.slug}`
@@ -39,341 +41,45 @@ function QRModal({ guest, onClose }: { guest: Guest; onClose: () => void }) {
       QRCode.toCanvas(canvasRef.current, url, {
         width: 220,
         margin: 2,
-        color: { dark: "#1a1a1a", light: "#faf7f0" },
       });
     }
   }, [url]);
 
-  // ── Feature 3: QR Download Template ──────────────────────────────────────
-  const downloadTemplate = async () => {
-    if (!canvasRef.current) return;
-    setDownloading(true);
-
-    const fontLinkId = "rouge-script-font";
-    if (!document.getElementById(fontLinkId)) {
-      const link = document.createElement("link");
-      link.id = fontLinkId;
-      link.rel = "stylesheet";
-      link.href = "https://fonts.googleapis.com/css2?family=Rouge+Script&display=swap";
-      document.head.appendChild(link);
-    }
-    await document.fonts.load("400 30px 'Rouge Script'");
-
-    const W = 480;
-    const H = 680;
-    const offscreen = document.createElement("canvas");
-    offscreen.width = W;
-    offscreen.height = H;
-    const ctx = offscreen.getContext("2d")!;
-
-    ctx.fillStyle = "#faf7f0";
-    ctx.fillRect(0, 0, W, H);
-
-    const cx = W / 2;
-    const cy = H / 2;
-    const radius = Math.min(W, H) / 2 - 12;
-
-    ctx.strokeStyle = "#c9a84c";
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-    ctx.stroke();
-
-    ctx.strokeStyle = "rgba(201,168,76,0.4)";
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius - 9, 0, Math.PI * 2);
-    ctx.stroke();
-
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius - 3, 0, Math.PI * 2);
-    ctx.clip();
-
-    ctx.fillStyle = "#faf7f0";
-    ctx.fillRect(0, 0, W, H);
-    ctx.textAlign = "center";
-
-    // ── ✦ ornament ────────────────────────────────────────────────────────
-    const topOfCircle = cy - radius + 3;
-    ctx.fillStyle = "#c9a84c";
-    ctx.font = "13px serif";
-
-
-    // ── Couple names ──────────────────────────────────────────────────────
-    const name1Y = topOfCircle + 72;
-    const ampY   = name1Y + 22;
-    const name2Y = ampY + 22;
-
-    ctx.fillStyle = "#c9a84c";
-    ctx.font = "400 30px 'Rouge Script', cursive";
-    ctx.fillText("Adil Farhan", W / 2, name1Y);
-
-    const ruleY = ampY - 5;
-    ctx.strokeStyle = "rgba(201,168,76,0.35)";
-    ctx.lineWidth = 0.8;
-    ctx.beginPath(); ctx.moveTo(110, ruleY); ctx.lineTo(205, ruleY); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(275, ruleY); ctx.lineTo(370, ruleY); ctx.stroke();
-    ctx.fillStyle = "#a08850";
-    ctx.font = "italic 14px serif";
-    ctx.fillText("&", W / 2, ampY);
-
-    ctx.fillStyle = "#c9a84c";
-    ctx.font = "400 30px 'Rouge Script', cursive";
-    ctx.fillText("Lubna Nasrin", W / 2, name2Y);
-
-    // ── Divider ───────────────────────────────────────────────────────────
-    const divY = name2Y + 22;
-    ctx.fillStyle = "rgba(201,168,76,0.7)";
-    ctx.font = "10px serif";
-    ctx.fillText("— ✦ —", W / 2, divY);
-
-    // ── QR Code ───────────────────────────────────────────────────────────
-    const qrSize = 185;
-    const qrX = (W - qrSize) / 2;
-    const qrY = divY + 16;
-
-    ctx.fillStyle = "#ffffff";
-    ctx.shadowColor = "rgba(180,150,80,0.15)";
-    ctx.shadowBlur = 14;
-    roundRect(ctx, qrX - 12, qrY - 12, qrSize + 24, qrSize + 24, 12);
-    ctx.fill();
-    ctx.shadowBlur = 0;
-
-    ctx.strokeStyle = "rgba(201,168,76,0.3)";
-    ctx.lineWidth = 1;
-    roundRect(ctx, qrX - 12, qrY - 12, qrSize + 24, qrSize + 24, 12);
-    ctx.stroke();
-
-    ctx.drawImage(canvasRef.current, qrX, qrY, qrSize, qrSize);
-
-    // ── "Scan to confirm your attendance" ────────────────────────────────
-    const msgY = qrY + qrSize + 20;
-    ctx.fillStyle = "#9a8860";
-    ctx.font = "italic 11px serif";
-    ctx.fillText("Scan to confirm your attendance", W / 2, msgY);
-
-    // ── Thin rule ─────────────────────────────────────────────────────────
-    const ruleLineY = msgY + 16;
-    ctx.strokeStyle = "rgba(201,168,76,0.35)";
-    ctx.lineWidth = 0.8;
-    ctx.beginPath();
-    ctx.moveTo(100, ruleLineY); ctx.lineTo(W - 100, ruleLineY);
-    ctx.stroke();
-
-    // ── Guest name — CAPITALIZED ──────────────────────────────────────────
-    // Declared FIRST so guestNameY is available for category below
-    const guestNameY = ruleLineY + 30;
-    ctx.fillStyle = "#3a3020";
-    ctx.font = "bold 22px serif";
-    ctx.fillText(guest.name.toUpperCase(), W / 2, guestNameY);
-
-    // ── Category badge — sits BELOW guest name ────────────────────────────
-    const categoryText = (guest.familyCategory || guest.category || "").toUpperCase();
-    const guestLabelY = guestNameY + 22;  // declared after guestNameY ✓
-
-    if (categoryText) {
-      ctx.font = "bold 9px sans-serif";
-      const badgeW = ctx.measureText(categoryText).width + 20;
-      const badgeH = 16;
-      const badgeX = W / 2 - badgeW / 2;
-      const badgeY = guestLabelY - 12;
-
-      ctx.fillStyle = "rgba(201,168,76,0.15)";
-      roundRect(ctx, badgeX, badgeY, badgeW, badgeH, 8);
-      ctx.fill();
-
-      ctx.strokeStyle = "rgba(201,168,76,0.4)";
-      ctx.lineWidth = 0.8;
-      roundRect(ctx, badgeX, badgeY, badgeW, badgeH, 8);
-      ctx.stroke();
-
-      ctx.fillStyle = "#a08040";
-      ctx.letterSpacing = "1.5px";
-      ctx.fillText(categoryText, W / 2, guestLabelY);
-      ctx.letterSpacing = "0px";
-    } else {
-      ctx.fillStyle = "#c0a870";
-      ctx.font = "9px sans-serif";
-      ctx.letterSpacing = "2px";
-      ctx.fillText("GUEST", W / 2, guestLabelY);
-      ctx.letterSpacing = "0px";
-    }
-
-    ctx.restore();
-
-    const link = document.createElement("a");
-    link.download = `invite-${guest.slug || guest.name}.png`;
-    link.href = offscreen.toDataURL("image/png");
-    link.click();
-    setDownloading(false);
-  };
-
-  // ── Feature 2: WhatsApp Share ────────────────────────────────────────────
-const shareWhatsApp = async () => {
-  if (!canvasRef.current) return;
-
-  // ── Build the invite card image ────────────────────────────────────────
-  const fontLinkId = "rouge-script-font";
-  if (!document.getElementById(fontLinkId)) {
-    const link = document.createElement("link");
-    link.id = fontLinkId;
-    link.rel = "stylesheet";
-    link.href = "https://fonts.googleapis.com/css2?family=Rouge+Script&display=swap";
-    document.head.appendChild(link);
-  }
-  await document.fonts.load("400 30px 'Rouge Script'");
-
-  // ── Canvas (square 1:1) ─────────────────────────────
-  const W = 600;
-  const H = 600;
-
-  const canvas = document.createElement("canvas");
-  canvas.width = W;
-  canvas.height = H;
-
-  const ctx = canvas.getContext("2d")!;
-
-  // ── Classic rose-toned background ───────────────────────────────────────
-  const bgGrad = ctx.createLinearGradient(0, 0, W, H);
-  bgGrad.addColorStop(0, "#FFE1EE");
-  bgGrad.addColorStop(0.55, "#F5A9C6");
-  bgGrad.addColorStop(1, "#7A2045");
-  ctx.fillStyle = bgGrad;
-  ctx.fillRect(0, 0, W, H);
-
-  // Rose blooms in opposite corners
-  drawRoseBloom(ctx, 92, 92, 1, 0);
-  drawRoseBloom(ctx, W - 92, H - 92, 1.1, 20);
-
-  // A few loose accent petals near the other two corners
-  drawPetal(ctx, W - 70, 60, (-40 * Math.PI) / 180, 30, 13, "#FF8AAD", 0.85);
-  drawPetal(ctx, W - 42, 96, (10 * Math.PI) / 180, 24, 11, "#C12664", 0.8);
-  drawPetal(ctx, 60, H - 70, (140 * Math.PI) / 180, 30, 13, "#FF8AAD", 0.85);
-  drawPetal(ctx, 96, H - 42, (190 * Math.PI) / 180, 24, 11, "#C12664", 0.8);
-
-  // Soft ivory vignette so the centre stays legible
-  const vignette = ctx.createRadialGradient(W / 2, H / 2, H * 0.1, W / 2, H / 2, H * 0.44);
-  vignette.addColorStop(0, "rgba(250,247,240,0.95)");
-  vignette.addColorStop(1, "rgba(250,247,240,0)");
-  ctx.fillStyle = vignette;
-  ctx.fillRect(0, 0, W, H);
-
-  // ── DOUBLE BORDER FRAME ───────────────────────────────
-  const pad = 20;
-
-  // outer border
-  ctx.strokeStyle = "rgba(201,168,76,0.45)";
-  ctx.lineWidth = 2;
-  ctx.strokeRect(pad, pad, W - pad * 2, H - pad * 2);
-
-  // inner border
-  const pad2 = 32;
-  ctx.strokeStyle = "rgba(201,168,76,0.25)";
-  ctx.lineWidth = 1;
-  ctx.strokeRect(pad2, pad2, W - pad2 * 2, H - pad2 * 2);
-
-  ctx.textAlign = "center";
-
-  // ── CONTENT — names & attractive wording only ───────────
-  let y = 200;
-
-  // Bismillah
-  ctx.fillStyle = "#1b4332";
-  ctx.font = "20px serif";
-  ctx.fillText("بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ", W / 2, y);
-
-  // Tagline
-  y += 36;
-  ctx.fillStyle = "#a8143f";
-  ctx.font = "11px 'Cinzel', serif";
-  ctx.letterSpacing = "3px";
-  ctx.fillText("TWO HEARTS · ONE BEGINNING", W / 2, y);
-  ctx.letterSpacing = "0px";
-
-  // Couple names
-  y += 84;
-  ctx.fillStyle = "#5c1533";
-  ctx.font = "400 50px 'Rouge Script', cursive";
-  ctx.fillText("Adil Farhan", W / 2, y);
-
-  y += 40;
-  ctx.strokeStyle = "rgba(201,168,76,0.5)";
-  ctx.lineWidth = 0.8;
-  ctx.beginPath(); ctx.moveTo(W / 2 - 110, y - 6); ctx.lineTo(W / 2 - 30, y - 6); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(W / 2 + 30, y - 6); ctx.lineTo(W / 2 + 110, y - 6); ctx.stroke();
-  ctx.fillStyle = "#c9a84c";
-  ctx.font = "italic 18px serif";
-  ctx.fillText("&", W / 2, y);
-
-  y += 46;
-  ctx.fillStyle = "#5c1533";
-  ctx.font = "italic 400 50px 'Rouge Script', cursive";
-  ctx.fillText("Lubna Nasrin", W / 2, y);
-
-  // Closing flourish
-  y += 45;
-  ctx.fillStyle = "rgba(201,168,76,0.7)";
-  ctx.font = "14px serif";
-  ctx.fillText("✦ ❧ ✦", W / 2, y);
-
-  ctx.restore();
-
-  // ── Compose the message ────────────────────────────────────────────────
-  const message =
-    `🌸 *Wedding Invitation* 🌸\n\n` +
-    `Dear *${guest.name}*,\n\n` +
-    `_Assalamu Alaikum,_\n\n` +
-    `With the blessings of Almighty Allah, you are cordially invited to the Nikah ceremony of\n\n` +
-    `💍 *Adil Farhan & Lubna Nasrin*\n\n` +
-    `📅 *Date:* 22 November 2026\n` +
-    `🕚 *Time:* 11:30 AM\n` +
-    `📍 *Venue:* Athafy Auditorium, Vadakara\n\n` +
-    `Your presence and blessings will make our special day even more memorable.\n\n` +
-    `👉 Please confirm your attendance:\n` +
-    `${url}\n\n` +
-    `We look forward to celebrating this joyful occasion with you and your family. 🤍`;
-
-  // ── Convert canvas to File ─────────────────────────────────────────────
-const blob = await new Promise<Blob>((resolve, reject) =>
-  canvas.toBlob(
-    (b) => (b ? resolve(b) : reject(new Error("Canvas toBlob failed"))),
-    "image/png"
-  )
-);
-  const imageFile = new File(
-    [blob],
-    `invite-${guest.slug || guest.name}.png`,
-    { type: "image/png" }
-  );
-
-  // ── Mobile: Web Share API (image + text together) ──────────────────────
-  if (navigator.canShare?.({ files: [imageFile] })) {
+  // ── Share: the invite link only, with the site's social share image attached ──
+  const shareLink = async () => {
     try {
-      await navigator.share({
-        files: [imageFile],
-        text: message,
+      const res = await fetch(SOCIAL_SHARE_IMAGE);
+      const blob = await res.blob();
+      const ext = blob.type.split("/")[1] || "png";
+      const imageFile = new File([blob], `wedding-invite.${ext}`, {
+        type: blob.type || "image/png",
       });
-      return; // ✅ done — user picked WhatsApp from the share sheet
-    } catch (err: any) {
-      if (err.name === "AbortError") return; // user cancelled — do nothing
-      // any other error → fall through to the two-step fallback below
+
+      if (navigator.canShare?.({ files: [imageFile] })) {
+        try {
+          await navigator.share({ files: [imageFile], text: url });
+          return; // ✅ done — user picked an app from the share sheet
+        } catch (err: any) {
+          if (err.name === "AbortError") return; // user cancelled
+          // fall through to the link-only fallback below
+        }
+      }
+    } catch (err) {
+      console.error(err);
+      // image unavailable — fall through to link-only share
     }
-  }
 
-  // ── Desktop fallback: save image + open WhatsApp text ─────────────────
-  // Step 1: auto-download the image so the user has it ready
-  const imgLink = document.createElement("a");
-  imgLink.href = canvas.toDataURL("image/png");
-  imgLink.download = `invite-${guest.slug || guest.name}.png`;
-  imgLink.click();
+    if (navigator.canShare?.({ url })) {
+      try {
+        await navigator.share({ url });
+        return;
+      } catch (err: any) {
+        if (err.name === "AbortError") return;
+      }
+    }
 
-  // Step 2: open WhatsApp with the text (user manually attaches the image)
-  setTimeout(() => {
-    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank");
-  }, 500); // small delay so the download triggers first
-};
-
+    window.open(`https://wa.me/?text=${encodeURIComponent(url)}`, "_blank");
+  };
 
   return (
     <div
@@ -402,122 +108,15 @@ const blob = await new Promise<Blob>((resolve, reject) =>
             <LinkIcon size={12} /> Copy
           </button>
           <button
-            onClick={shareWhatsApp}
+            onClick={shareLink}
             className="py-2 bg-[#25D366] text-white rounded-lg text-xs uppercase tracking-wider hover:bg-[#1ebe5c] transition flex items-center justify-center gap-1"
           >
-            <Share2 size={12} /> WhatsApp
+            <Share2 size={12} /> Share
           </button>
         </div>
-
-        <button
-          onClick={downloadTemplate}
-          disabled={downloading}
-          className="w-full py-2.5 bg-[#c9a84c] text-white rounded-lg text-xs uppercase tracking-wider hover:bg-[#b8973b] transition flex items-center justify-center gap-2 disabled:opacity-60"
-        >
-          <Download size={13} />
-          {downloading ? "Generating…" : "Download Invite Card"}
-        </button>
       </div>
     </div>
   );
-}
-
-// Helper: rounded rect path
-function roundRect(
-  ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  w: number,
-  h: number,
-  r: number
-) {
-  ctx.beginPath();
-  ctx.moveTo(x + r, y);
-  ctx.lineTo(x + w - r, y);
-  ctx.arcTo(x + w, y, x + w, y + r, r);
-  ctx.lineTo(x + w, y + h - r);
-  ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
-  ctx.lineTo(x + r, y + h);
-  ctx.arcTo(x, y + h, x, y + h - r, r);
-  ctx.lineTo(x, y + r);
-  ctx.arcTo(x, y, x + r, y, r);
-  ctx.closePath();
-}
-
-// Helper: a single rose-petal shape pointing outward from (cx, cy) at `angle` radians
-function drawPetal(
-  ctx: CanvasRenderingContext2D,
-  cx: number,
-  cy: number,
-  angle: number,
-  length: number,
-  width: number,
-  color: string,
-  alpha = 1
-) {
-  ctx.save();
-  ctx.translate(cx, cy);
-  ctx.rotate(angle);
-  ctx.globalAlpha = alpha;
-  ctx.fillStyle = color;
-  ctx.beginPath();
-  ctx.moveTo(0, 0);
-  ctx.bezierCurveTo(width, length * 0.25, width * 0.6, length * 0.85, 0, length);
-  ctx.bezierCurveTo(-width * 0.6, length * 0.85, -width, length * 0.25, 0, 0);
-  ctx.closePath();
-  ctx.fill();
-  ctx.restore();
-}
-
-// Helper: a classic layered rose bloom, built from three rings of petals
-function drawRoseBloom(
-  ctx: CanvasRenderingContext2D,
-  cx: number,
-  cy: number,
-  scale = 1,
-  rotationDeg = 0
-) {
-  const rot = (rotationDeg * Math.PI) / 180;
-  const toRad = (deg: number) => (deg * Math.PI) / 180;
-
-  // outer ring — palest petals
-  const outerCount = 8;
-  for (let i = 0; i < outerCount; i++) {
-    drawPetal(
-      ctx, cx, cy,
-      rot + toRad((360 / outerCount) * i),
-      46 * scale, 20 * scale,
-      "#FFC1E3", 0.9
-    );
-  }
-
-  // middle ring — blush/crimson
-  const midCount = 6;
-  for (let i = 0; i < midCount; i++) {
-    drawPetal(
-      ctx, cx, cy,
-      rot + toRad(30 + (360 / midCount) * i),
-      33 * scale, 16 * scale,
-      i % 2 === 0 ? "#FF8AAD" : "#FF5B84", 0.92
-    );
-  }
-
-  // inner ring — deep rose
-  const innerCount = 5;
-  for (let i = 0; i < innerCount; i++) {
-    drawPetal(
-      ctx, cx, cy,
-      rot + toRad(15 + (360 / innerCount) * i),
-      20 * scale, 11 * scale,
-      i % 2 === 0 ? "#A73060" : "#C12664", 0.95
-    );
-  }
-
-  // centre
-  ctx.beginPath();
-  ctx.fillStyle = "#5C1533";
-  ctx.arc(cx, cy, 6 * scale, 0, Math.PI * 2);
-  ctx.fill();
 }
 
 // ─── Family Category Modal ─────────────────────────────────────────────────────
@@ -629,6 +228,78 @@ function FamilyCategoryModal({
               </button>
             </div>
           ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Wishes Modal ───────────────────────────────────────────────────────────────
+function WishesModal({
+  wishes, loading, onDelete, onClose,
+}: {
+  wishes: Wish[];
+  loading: boolean;
+  onDelete: (id: string) => Promise<void>;
+  onClose: () => void;
+}) {
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        className="relative bg-[#faf7f0] rounded-2xl p-6 w-full max-w-lg mx-4 shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 p-1 rounded-full hover:bg-black/10 transition"
+        >
+          <X size={16} className="text-[#7a6a4a]" />
+        </button>
+        <h3 className="font-serif text-xl text-[#7a6a4a] mb-4 flex items-center gap-2">
+          <MessageSquareHeart size={18} className="text-[#c9a84c]" />
+          Guest Wishes
+        </h3>
+
+        <div className="space-y-2 max-h-96 overflow-y-auto">
+          {loading ? (
+            <p className="text-center text-[#b0a080] text-sm py-8">Loading…</p>
+          ) : wishes.length === 0 ? (
+            <p className="text-center text-[#b0a080] text-sm py-8">
+              No wishes yet.
+            </p>
+          ) : (
+            wishes.map((w) => (
+              <div
+                key={w._id}
+                className="relative px-3 py-3 bg-white rounded-lg border border-[#e8dfc0]"
+              >
+                <Quote size={13} className="absolute top-3 right-9 text-[#c9a84c]/20" />
+                <p className="text-sm text-[#3a3020] italic pr-6 mb-2">
+                  {w.message}
+                </p>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-medium text-[#7a6a4a]">
+                    — {w.name}
+                  </span>
+                  <span className="text-[10px] text-[#b0a080]">
+                    {new Date(w.createdAt).toLocaleDateString([], {
+                      day: "numeric", month: "short", year: "numeric",
+                    })}
+                  </span>
+                </div>
+                <button
+                  onClick={() => onDelete(w._id)}
+                  className="absolute top-3 right-2.5 p-1 hover:bg-red-50 rounded text-red-400 transition"
+                  title="Delete wish"
+                >
+                  <Trash2 size={13} />
+                </button>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>
@@ -790,6 +461,9 @@ export default function AdminDashboard() {
 
   const [qrGuest, setQrGuest] = useState<Guest | null>(null);
   const [showFamilyModal, setShowFamilyModal] = useState(false);
+  const [wishes, setWishes] = useState<Wish[]>([]);
+  const [wishesLoading, setWishesLoading] = useState(false);
+  const [showWishesModal, setShowWishesModal] = useState(false);
 
   const [newName, setNewName] = useState("");
   const [newSide, setNewSide] = useState<"bride" | "groom">("bride");
@@ -802,6 +476,7 @@ export default function AdminDashboard() {
       setIsAuthenticated(true);
       fetchGuests(true);
       fetchFamilyCategories();
+      fetchWishes();
     } else {
       alert("Invalid credentials");
     }
@@ -869,6 +544,37 @@ export default function AdminDashboard() {
       throw new Error(data.error || "Failed to delete category");
     }
     await fetchFamilyCategories();
+  };
+
+  const fetchWishes = async () => {
+    try {
+      setWishesLoading(true);
+      const res = await fetch("/api/wishes");
+      if (res.ok) {
+        const data = await res.json();
+        setWishes(data.wishes || []);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setWishesLoading(false);
+    }
+  };
+
+  const deleteWish = async (id: string) => {
+    const confirmed = window.confirm("Delete this wish?");
+    if (!confirmed) return;
+    try {
+      const res = await fetch(`/api/admin/wishes/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        setWishes((prev) => prev.filter((w) => w._id !== id));
+      } else {
+        alert("Failed to delete wish");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Failed to delete wish");
+    }
   };
 
   const generateLink = async (e: React.FormEvent) => {
@@ -1078,6 +784,14 @@ export default function AdminDashboard() {
           onClose={() => setShowFamilyModal(false)}
         />
       )}
+      {showWishesModal && (
+        <WishesModal
+          wishes={wishes}
+          loading={wishesLoading}
+          onDelete={deleteWish}
+          onClose={() => setShowWishesModal(false)}
+        />
+      )}
 
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-8">
         {/* Header */}
@@ -1110,6 +824,15 @@ export default function AdminDashboard() {
               title="Refresh now"
             >
               <RefreshCw size={13} />
+            </button>
+            <button
+              onClick={() => {
+                setShowWishesModal(true);
+                fetchWishes();
+              }}
+              className="flex items-center gap-2 px-4 py-2 border border-[#c9a84c]/40 text-[#c9a84c] rounded-xl text-xs uppercase tracking-wider hover:bg-[#c9a84c]/10 transition"
+            >
+              <MessageSquareHeart size={14} /> Wishes
             </button>
             <button
               onClick={() => setShowFamilyModal(true)}

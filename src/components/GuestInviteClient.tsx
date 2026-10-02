@@ -8,6 +8,7 @@ import RSVP from "@/components/RSVP";
 import Countdown from "@/components/Countdown";
 import Timeline from "@/components/Timeline";
 import DressCode from "@/components/DressCode";
+import Wishes from "@/components/Wishes";
 import InviteCover from "@/components/InviteCover";
 
 interface GuestInviteClientProps {
@@ -43,6 +44,7 @@ export default function GuestInviteClient({
           <Countdown />
           <Timeline />
           <DressCode />
+          <Wishes />
         </div>
       )}
     </main>

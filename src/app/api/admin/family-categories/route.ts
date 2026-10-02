@@ -5,7 +5,12 @@ import FamilyCategory from "@/models/FamilyCategory";
 // GET /api/admin/family-categories
 export async function GET() {
   try {
-    await connectDB();
+    try {
+      await connectDB();
+    } catch {
+      console.warn("DB not connected");
+      return NextResponse.json({ categories: [] }, { status: 200 });
+    }
     const categories = await FamilyCategory.find().sort({ side: 1, name: 1 });
     return NextResponse.json({ categories }, { status: 200 });
   } catch (error) {
