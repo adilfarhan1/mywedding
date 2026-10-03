@@ -36,19 +36,19 @@ const bismillah = Scheherazade_New({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://www.adillubna.com"),
   title: "Wedding Invitation — Adil Farhan & Lubna Nasrin",
   description: "You are joyfully invited to our Nikah celebration.",
   openGraph: {
     title: "Wedding Invitation — Adil Farhan & Lubna Nasrin",
     description: "You are joyfully invited to our Nikah celebration.",
-    images: [{ url: "/social-share.png", width: 1729, height: 910 }],
+    images: [{ url: "/social-share.jpg", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Wedding Invitation — Adil Farhan & Lubna Nasrin",
     description: "You are joyfully invited to our Nikah celebration.",
-    images: ["/social-share.png"],
+    images: ["/social-share.jpg"],
   },
   other: {
     "color-scheme": "light",
