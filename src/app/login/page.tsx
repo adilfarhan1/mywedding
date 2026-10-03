@@ -794,7 +794,7 @@ export default function AdminDashboard() {
               )}
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
             <button
               onClick={() => fetchGuests(true)}
               className="flex items-center gap-2 px-3 py-2 border border-[#e0d4b0] text-[#b0a080] rounded-xl text-xs uppercase tracking-wider hover:bg-[#f5ead0] transition"
@@ -807,19 +807,19 @@ export default function AdminDashboard() {
                 setShowWishesModal(true);
                 fetchWishes();
               }}
-              className="flex items-center gap-2 px-4 py-2 border border-[#c9a84c]/40 text-[#c9a84c] rounded-xl text-xs uppercase tracking-wider hover:bg-[#c9a84c]/10 transition"
+              className="flex items-center gap-1.5 px-3 sm:px-4 py-2 border border-[#c9a84c]/40 text-[#c9a84c] rounded-xl text-xs uppercase tracking-wider hover:bg-[#c9a84c]/10 transition"
             >
               <MessageSquareHeart size={14} /> Wishes
             </button>
             <button
               onClick={() => setShowFamilyModal(true)}
-              className="flex items-center gap-2 px-4 py-2 border border-[#c9a84c]/40 text-[#c9a84c] rounded-xl text-xs uppercase tracking-wider hover:bg-[#c9a84c]/10 transition"
+              className="flex items-center gap-1.5 px-3 sm:px-4 py-2 border border-[#c9a84c]/40 text-[#c9a84c] rounded-xl text-xs uppercase tracking-wider hover:bg-[#c9a84c]/10 transition"
             >
               <Tag size={14} /> Families
             </button>
             <button
               onClick={downloadCSV}
-              className="flex items-center gap-2 px-4 py-2 bg-[#c9a84c] text-white rounded-xl text-xs uppercase tracking-wider hover:bg-[#b8973b] transition shadow-sm"
+              className="flex items-center gap-1.5 px-3 sm:px-4 py-2 bg-[#c9a84c] text-white rounded-xl text-xs uppercase tracking-wider hover:bg-[#b8973b] transition shadow-sm"
             >
               <Download size={14} /> Export
             </button>
@@ -922,7 +922,7 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Add Guest Form */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl p-5 border border-[#e8dfc0] shadow-sm sticky top-6">
@@ -1038,21 +1038,23 @@ export default function AdminDashboard() {
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`flex-1 py-3.5 text-xs uppercase tracking-widest font-medium transition flex items-center justify-center gap-1.5 ${
+                    className={`flex-1 min-w-0 py-2.5 sm:py-3.5 text-[10px] sm:text-xs uppercase tracking-widest font-medium transition flex items-center justify-center gap-1 sm:gap-1.5 ${
                       activeTab === tab
                         ? "border-b-2 border-[#c9a84c] text-[#7a6a4a] bg-[#fdf8ee]"
                         : "text-[#b0a080] hover:text-[#7a6a4a]"
                     }`}
                   >
                     {tab === "bride" && (
-                      <Heart size={11} className="text-pink-400" />
+                      <Heart size={11} className="text-pink-400 shrink-0" />
                     )}
                     {tab === "groom" && (
-                      <Crown size={11} className="text-blue-400" />
+                      <Crown size={11} className="text-blue-400 shrink-0" />
                     )}
-                    {tab === "all"
-                      ? "All Guests"
-                      : `${tab.charAt(0).toUpperCase() + tab.slice(1)}'s Side`}
+                    <span className="truncate">
+                      {tab === "all"
+                        ? "All Guests"
+                        : `${tab.charAt(0).toUpperCase() + tab.slice(1)}'s Side`}
+                    </span>
                   </button>
                 ))}
               </div>
