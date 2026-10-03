@@ -9,8 +9,6 @@ import {
 } from "lucide-react";
 import QRCode from "qrcode";
 
-const SOCIAL_SHARE_IMAGE = "/social-share.png";
-
 // ─── Types ────────────────────────────────────────────────────────────────────
 type Guest = {
   _id: string;
@@ -45,30 +43,9 @@ function QRModal({ guest, onClose }: { guest: Guest; onClose: () => void }) {
     }
   }, [url]);
 
-  // ── Share: the invite link only, with the site's social share image attached ──
+  // ── Share: the invite link only — the destination page's own Open Graph
+  // metadata supplies the preview image, so no file is attached here. ──
   const shareLink = async () => {
-    try {
-      const res = await fetch(SOCIAL_SHARE_IMAGE);
-      const blob = await res.blob();
-      const ext = blob.type.split("/")[1] || "png";
-      const imageFile = new File([blob], `wedding-invite.${ext}`, {
-        type: blob.type || "image/png",
-      });
-
-      if (navigator.canShare?.({ files: [imageFile] })) {
-        try {
-          await navigator.share({ files: [imageFile], text: url });
-          return; // ✅ done — user picked an app from the share sheet
-        } catch (err: any) {
-          if (err.name === "AbortError") return; // user cancelled
-          // fall through to the link-only fallback below
-        }
-      }
-    } catch (err) {
-      console.error(err);
-      // image unavailable — fall through to link-only share
-    }
-
     if (navigator.canShare?.({ url })) {
       try {
         await navigator.share({ url });
