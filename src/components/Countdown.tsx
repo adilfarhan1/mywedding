@@ -86,7 +86,7 @@ END:VCALENDAR`;
     src="/countdown-bg.webp"
     alt="Background"
     fill
-    priority
+    loading="lazy"
     quality={85}
     className="object-cover object-top"
   />

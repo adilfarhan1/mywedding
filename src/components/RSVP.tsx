@@ -84,7 +84,7 @@ export default function RSVP({
           src="/texture2.webp"
           alt="Background"
           fill
-          priority
+          loading="lazy"
           quality={85}
           className="object-cover object-top"
         />

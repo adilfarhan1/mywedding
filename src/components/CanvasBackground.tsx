@@ -1,81 +1,122 @@
 "use client";
 
-import { useRef, useMemo } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { PointMaterial, Points } from "@react-three/drei";
-import * as THREE from "three";
+import { useEffect, useRef } from "react";
 
-function ParticleSwarm({ count = 1200 }) {
-  const pointsRef = useRef<THREE.Points>(null);
+type Particle = {
+  x: number;
+  y: number;
+  r: number;
+  baseOpacity: number;
+  vx: number;
+  vy: number;
+  twinkle: number;
+  twinkleSpeed: number;
+};
 
-  const positions = useMemo(() => {
-    const p = new Float32Array(count * 3);
-
-    for (let i = 0; i < count; i++) {
-      const x = (Math.random() - 0.5) * 12;
-      const y = (Math.random() - 0.5) * 12;
-      const z = (Math.random() - 0.5) * 12;
-
-      p[i * 3] = x;
-      p[i * 3 + 1] = y;
-      p[i * 3 + 2] = z;
-    }
-
-    return p;
-  }, [count]);
-
-  useFrame((_, delta) => {
-    if (pointsRef.current) {
-      pointsRef.current.rotation.y += delta * 0.03;
-      pointsRef.current.rotation.x += delta * 0.015;
-    }
-  });
-
-  return (
-    <Points
-      ref={pointsRef}
-      positions={positions}
-      stride={3}
-      frustumCulled={false}
-    >
-      <PointMaterial
-        transparent
-        color="#C9A84C"   // 🌟 gold particles (wedding theme)
-        size={0.04}
-        sizeAttenuation
-        depthWrite={false}
-        opacity={0.25}
-        blending={THREE.AdditiveBlending}
-      />
-    </Points>
-  );
-}
+const PARTICLE_COUNT = 160;
+const GOLD = "201, 168, 76"; // #C9A84C as rgb
 
 export default function CanvasBackground() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let width = 0;
+    let height = 0;
+    let dpr = Math.min(window.devicePixelRatio || 1, 2);
+    let particles: Particle[] = [];
+
+    function resize() {
+      if (!canvas) return;
+      width = window.innerWidth;
+      height = window.innerHeight;
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function initParticles() {
+      particles = Array.from({ length: PARTICLE_COUNT }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        r: Math.random() * 1.6 + 0.4,
+        baseOpacity: Math.random() * 0.35 + 0.1,
+        vx: (Math.random() - 0.5) * 0.08,
+        vy: (Math.random() - 0.5) * 0.08,
+        twinkle: Math.random() * Math.PI * 2,
+        twinkleSpeed: Math.random() * 0.015 + 0.005,
+      }));
+    }
+
+    resize();
+    initParticles();
+    window.addEventListener("resize", resize, { passive: true });
+
+    let rafId = 0;
+    let running = true;
+
+    function draw() {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, width, height);
+      ctx.globalCompositeOperation = "lighter";
+
+      for (const p of particles) {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.twinkle += p.twinkleSpeed;
+
+        if (p.x < -5) p.x = width + 5;
+        if (p.x > width + 5) p.x = -5;
+        if (p.y < -5) p.y = height + 5;
+        if (p.y > height + 5) p.y = -5;
+
+        const opacity = p.baseOpacity * (0.6 + 0.4 * Math.sin(p.twinkle));
+
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(${GOLD}, ${opacity})`;
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      if (running) rafId = requestAnimationFrame(draw);
+    }
+
+    const onVisibility = () => {
+      running = !document.hidden;
+      if (running) rafId = requestAnimationFrame(draw);
+      else cancelAnimationFrame(rafId);
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
+    rafId = requestAnimationFrame(draw);
+
+    return () => {
+      running = false;
+      cancelAnimationFrame(rafId);
+      window.removeEventListener("resize", resize);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, []);
+
   return (
     <>
-      {/* 🌿 Clean cinematic background (no bold gradient) */}
+      {/* Clean cinematic background */}
+      <div className="fixed inset-0 -z-10" style={{ background: "#FAF7F0" }} />
+
+      {/* Ambient gold particle layer */}
+      <canvas ref={canvasRef} className="fixed inset-0 -z-10 pointer-events-none" />
+
+      {/* Soft overlay for readability */}
       <div
         className="fixed inset-0 -z-10"
-        style={{
-          background: "linear-gradient(180deg, #FAF7F0, #FAF7F0)",
-        }}
-      />
-
-      {/* ✨ 3D particle layer */}
-      <div className="fixed inset-0 -z-10">
-        <Canvas camera={{ position: [0, 0, 5], fov: 60 }}>
-          <ambientLight intensity={0.6} />
-          <ParticleSwarm />
-        </Canvas>
-      </div>
-
-      {/* 🌫 Optional soft overlay for readability */}
-      <div
-        className="fixed inset-0 -z-10"
-        style={{
-           background: "linear-gradient(180deg, #FAF7F0, #E4C77433)",
-        }}
+        style={{ background: "linear-gradient(180deg, #FAF7F0, #E4C77433)" }}
       />
     </>
   );
