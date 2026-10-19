@@ -173,6 +173,8 @@ export default function GustHero({ guestName = "", brideFirst = false }: GustHer
 >
   <h2
     style={{
+      position: "relative",
+      zIndex: 1,
       fontFamily: "var(--font-rouge), cursive",
       fontSize: "clamp(2.2rem, 7vw, 3.5rem)",
       color: "var(--color-emerald)",
@@ -187,6 +189,7 @@ export default function GustHero({ guestName = "", brideFirst = false }: GustHer
   <div
     style={{
       position: "absolute",
+      zIndex: 2,
       left: "50%",
       transform: "translateX(-50%)",
       top: "40%",
@@ -206,6 +209,8 @@ export default function GustHero({ guestName = "", brideFirst = false }: GustHer
 
   <h2
     style={{
+      position: "relative",
+      zIndex: 1,
       fontFamily: "var(--font-rouge), cursive",
       fontSize: "clamp(2.2rem, 7vw, 3.5rem)",
       color: "var(--color-emerald)",

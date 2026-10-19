@@ -17,7 +17,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const timelineEvents = [
   { time: "10:30 AM", title: "Groom Entry", description: "The royal arrival.", icon: Stars, emoji: "🌿" },
-  { time: "11:00 PM", title: "Nikah Ceremony", description: "The sacred union.", icon: Heart, emoji: "🤍" },
+  { time: "11:00 AM", title: "Nikah Ceremony", description: "The sacred union.", icon: Heart, emoji: "🤍" },
   { time: "12:00 PM", title: "Bride Entry", description: "Walking into a new chapter.", icon: Sparkles, emoji: "🌸" },
   { time: "12:15 PM", title: "Couple on Stage", description: "Blessings and photos.", icon: Music, emoji: "✨" },
   { time: "12:30 PM", title: "Entertainment", description: "A joyful traditional celebration.", icon: Music, emoji: "🥁" },

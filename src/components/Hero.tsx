@@ -167,6 +167,8 @@ export default function Hero({ brideFirst = false }: { brideFirst?: boolean }) {
 >
   <h2
     style={{
+      position: "relative",
+      zIndex: 1,
       fontFamily: "var(--font-rouge), cursive",
       fontSize: "clamp(2.2rem, 7vw, 3.5rem)",
       color: "var(--color-emerald)",
@@ -181,6 +183,7 @@ export default function Hero({ brideFirst = false }: { brideFirst?: boolean }) {
   <div
     style={{
       position: "absolute",
+      zIndex: 2,
       left: "50%",
       transform: "translateX(-50%)",
       top: "40%",
@@ -200,6 +203,8 @@ export default function Hero({ brideFirst = false }: { brideFirst?: boolean }) {
 
   <h2
     style={{
+      position: "relative",
+      zIndex: 1,
       fontFamily: "var(--font-rouge), cursive",
       fontSize: "clamp(2.2rem, 7vw, 3.5rem)",
       color: "var(--color-emerald)",
