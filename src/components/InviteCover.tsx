@@ -7,9 +7,10 @@ import Image from "next/image";
 interface InviteCoverProps {
   guestName?: string;
   onOpen: () => void;
+  brideFirst?: boolean;
 }
 
-export default function InviteCover({ guestName, onOpen }: InviteCoverProps) {
+export default function InviteCover({ guestName, onOpen, brideFirst = false }: InviteCoverProps) {
   return (
     <motion.div
       key="invite-cover"
@@ -89,7 +90,7 @@ export default function InviteCover({ guestName, onOpen }: InviteCoverProps) {
             color: "var(--color-emerald)",
           }}
         >
-          Adil Farhan
+          {brideFirst ? "Lubna Nasrin" : "Adil Farhan"}
         </motion.p>
 
         <span
@@ -114,7 +115,7 @@ export default function InviteCover({ guestName, onOpen }: InviteCoverProps) {
             color: "var(--color-emerald)",
           }}
         >
-          Lubna Nasrin
+          {brideFirst ? "Adil Farhan" : "Lubna Nasrin"}
         </motion.p>
       </motion.div>
 

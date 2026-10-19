@@ -6,9 +6,10 @@ import Image from "next/image";
 
 interface GustHeroProps {
   guestName?: string;
+  brideFirst?: boolean;
 }
 
-export default function GustHero({ guestName = "" }: GustHeroProps) {
+export default function GustHero({ guestName = "", brideFirst = false }: GustHeroProps) {
   return (
     <section
       className="relative flex flex-col items-center justify-center py-20 px-4 min-h-screen"
@@ -134,7 +135,7 @@ export default function GustHero({ guestName = "" }: GustHeroProps) {
                   marginBottom: 20,
                 }}
               >
-                Mr. Ibrahim & Mrs. Naseema
+                {brideFirst ? "Mr. Riyas & Mrs. Rahana" : "Mr. Ibrahim & Mrs. Naseema"}
                 <br />
                 <span
                   className="calligraphy"
@@ -148,7 +149,7 @@ export default function GustHero({ guestName = "" }: GustHeroProps) {
                   together with
                 </span>
                 <br />
-                Mr. Riyas & Mrs. Rahana
+                {brideFirst ? "Mr. Ibrahim & Mrs. Naseema" : "Mr. Riyas & Mrs. Rahana"}
               </p>
 
               <p
@@ -179,7 +180,7 @@ export default function GustHero({ guestName = "" }: GustHeroProps) {
       margin: 0,
     }}
   >
-    Adil Farhan
+    {brideFirst ? "Lubna Nasrin" : "Adil Farhan"}
   </h2>
 
   {/* Decorative & */}
@@ -213,7 +214,7 @@ export default function GustHero({ guestName = "" }: GustHeroProps) {
       // marginTop: 10,
     }}
   >
-    Lubna Nasrin
+    {brideFirst ? "Adil Farhan" : "Lubna Nasrin"}
   </h2>
 </div>
 
@@ -270,7 +271,7 @@ export default function GustHero({ guestName = "" }: GustHeroProps) {
                     Nikah
                   </div>
                   <div style={{ fontSize: 22, color: "var(--color-emerald)" }}>
-                    11:30 AM
+                    11:00 AM
                   </div>
                 </div>
 

@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { MapPin } from "lucide-react";
 import Image from "next/image";
 
-export default function Hero() {
+export default function Hero({ brideFirst = false }: { brideFirst?: boolean }) {
   return (
     <section
       className="relative flex flex-col items-center justify-center py-20 px-4 min-h-screen"
@@ -129,7 +129,7 @@ export default function Hero() {
                   marginBottom: 20,
                 }}
               >
-                Mr. Ibrahim & Mrs. Naseema
+                {brideFirst ? "Mr. Riyas & Mrs. Rahana" : "Mr. Ibrahim & Mrs. Naseema"}
                 <br />
                 <span
                   className="calligraphy"
@@ -143,7 +143,7 @@ export default function Hero() {
                   together with
                 </span>
                 <br />
-                Mr. Riyas & Mrs. Rahana
+                {brideFirst ? "Mr. Ibrahim & Mrs. Naseema" : "Mr. Riyas & Mrs. Rahana"}
               </p>
 
               <p
@@ -174,7 +174,7 @@ export default function Hero() {
       margin: 0,
     }}
   >
-    Adil Farhan
+    {brideFirst ? "Lubna Nasrin" : "Adil Farhan"}
   </h2>
 
   {/* Decorative & */}
@@ -208,7 +208,7 @@ export default function Hero() {
       // marginTop: 10,
     }}
   >
-    Lubna Nasrin
+    {brideFirst ? "Adil Farhan" : "Lubna Nasrin"}
   </h2>
 </div>
 
@@ -228,7 +228,7 @@ export default function Hero() {
                     Nikah
                   </div>
                   <div style={{ fontSize: 22, color: "var(--color-emerald)" }}>
-                    11:30 AM
+                    11:00 AM
                   </div>
                 </div>
 
